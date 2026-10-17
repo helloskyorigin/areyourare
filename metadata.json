@@ -1,0 +1,6 @@
+{
+  "name": "OUTLIER — Global Birth-Pattern Discovery",
+  "description": "Discover what makes your birth unusual. OUTLIER searches your birth-chart pattern against a global reference population to reveal your rarest statistical pattern.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

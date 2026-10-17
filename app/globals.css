@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: "Cormorant Garamond", Georgia, serif;
+    --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #050506;
+    color: #E8E6E3;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif);
+  }
+}
+
+/* Subtle continuous slow rotation for globe inner texture */
+@keyframes slow-rotate {
+  from {
+    transform: rotate(0deg) scale(1.04);
+  }
+  to {
+    transform: rotate(360deg) scale(1.04);
+  }
+}
+
+/* Subtle orbital satellite paths */
+@keyframes orbit-1 {
+  0% {
+    transform: rotate(0deg) translateX(120px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(120px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit-2 {
+  0% {
+    transform: rotate(180deg) translateX(140px) rotate(-180deg);
+  }
+  100% {
+    transform: rotate(540deg) translateX(140px) rotate(-540deg);
+  }
+}
+
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-slow-rotate {
+  animation: slow-rotate 180s linear infinite;
+}
+
+.animate-float-subtle {
+  animation: float-subtle 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-slow-rotate,
+  .animate-float-subtle {
+    animation: none !important;
+  }
+}
+
+/* Luxury micro-glow and subtle grain/gradient effects */
+.glow-gold-subtle {
+  box-shadow: 0 0 50px -10px rgba(220, 185, 130, 0.15);
+}
+
+.glow-card {
+  box-shadow: 0 0 60px -15px rgba(210, 180, 140, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050506;
+}
+::-webkit-scrollbar-thumb {
+  background: #26262b;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
