@@ -18,14 +18,14 @@ export function PremiumCTA({date,paid}:{date:string;paid:boolean}) {
     } catch(e) {setError(e instanceof Error?e.message:'Unable to start payment');setLoading(false);}
   }
   return <div className="premium">
-    <div className="eyebrow">✳ YOUR BIRTHDAY TIME CAPSULE</div><h2>The first moment is only <em>the beginning.</em></h2>
-    <p>Turn a single date into a beautifully curated, source-linked journey through history. More stories. More connections. A keepsake worth sharing.</p>
+    <div className="eyebrow">✳ YOUR BIRTHDAY TIME CAPSULE</div><h2>Your birthday has <em>more stories.</em></h2>
+    <p>You've discovered one moment. Open the full historical timeline, explore the lives connected to your day, and keep your own source-linked Birthday Time Capsule.</p>
     <div className="premium-benefits"><span><Check size={15}/> Complete historical timeline</span><span><Check size={15}/> Famous birthday connections</span><span><Check size={15}/> Birth-year matches when available</span><span><Check size={15}/> Print-ready personal archive</span></div>
     <div className="premium-bottom"><strong>$2 <small>one time</small></strong>
       {paid?<Link href={'/capsule?date='+encodeURIComponent(date)} className="button-primary">Open my capsule <ArrowUpRight size={18}/></Link>:
       <button type="button" className="button-primary" onClick={checkout} disabled={loading}>
-        {loading?<LoaderCircle className="spin" size={18}/>:<LockKeyhole size={17}/>} Unlock my capsule <ArrowUpRight size={18}/></button>}</div>
-    <p className="premium-note">One-time payment · No subscription · Current-browser access</p>
+        {loading?<LoaderCircle className="spin" size={18}/>:<LockKeyhole size={17}/>} Unlock the full archive <ArrowUpRight size={18}/></button>}</div>
+    <p className="premium-note">One-time payment · No subscription · Access from this browser after checkout</p>
     {error && <p className="form-error" role="alert">{error}</p>}
   </div>;
 }
