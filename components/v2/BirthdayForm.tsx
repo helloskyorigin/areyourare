@@ -16,7 +16,7 @@ export function BirthdayForm({ compact = false }: { compact?: boolean }) {
     setError('');
     router.push('/searching?date='+encodeURIComponent(parsed.iso));
   }
-  return <form className={'birthday-form '+(compact?'birthday-form-compact':'')} onSubmit={submit}>
+  return <form id={compact ? undefined : 'birthday-form'} className={'birthday-form '+(compact?'birthday-form-compact':'')} onSubmit={submit}>
     <label htmlFor={compact?'date-discover':'date-hero'}><CalendarDays size={17}/> Your date of birth</label>
     <div className="birthday-fields"><input type="date" id={compact?'date-discover':'date-hero'} value={value}
       min="1900-01-01" max={max} required aria-invalid={Boolean(error)} onChange={e=>{setValue(e.target.value);setError('');}}/>

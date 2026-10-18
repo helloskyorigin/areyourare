@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { ArrowUpRight, Clock3 } from 'lucide-react';
 export function SiteHeader() {
   return <header className="site-header">
+    <a className="skip-link" href="#main-content">Skip to content</a>
     <Link href="/" className="brand" aria-label="AREYOURARE home"><span className="brand-mark">✳</span> AREYOURARE<span className="brand-dot">.</span></Link>
-    <nav aria-label="Main navigation"><Link href="/#experience" className="nav-secondary">The experience</Link><Link href="/discover" className="nav-action">Explore my day <ArrowUpRight size={16}/></Link></nav>
+    <nav aria-label="Main navigation"><Link href="/#experience" className="nav-secondary">The experience</Link><Link href="/#birthday-form" className="nav-action">Explore my day <ArrowUpRight size={16}/></Link></nav>
   </header>;
 }
 export function SiteFooter() {

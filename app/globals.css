@@ -33,3 +33,99 @@ h1 em,h2 em,.book-date em{color:var(--gold);font-weight:400}h1,h2{line-height:1.
 @media(max-width:480px){.birthday-fields{display:flex;flex-direction:column;padding:8px}.birthday-fields input{min-height:52px;padding:9px 13px;width:100%}.birthday-fields .button-primary{width:100%}.hero-trust{font-size:10px}.hero-portal{min-height:320px}.portal-ring{width:280px;height:280px}.ring-two{width:225px;height:225px}.ring-three{width:170px;height:170px}.portal-centered strong{font-size:83px}.portal-centered em{font-size:13px}.portal-cross{left:12%}.result-date-wrap{align-items:flex-start;flex-direction:column}.result-date-wrap h1{font-size:clamp(74px,17vw,115px)}.born-label{padding-left:12px}.result-line{font-size:8px}.person-card img{width:28%}.feature-story-copy h2{font-size:46px}.capsule-cover h1{font-size:69px}.cover-birth-year{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}html{scroll-behavior:auto}}
 @media print{body,.site{background:white!important;color:black!important}.site-header,.site-footer,.button-primary,.button-secondary,.favorite-button,.capsule-tabs,.capsule-search,.capsule-cover-bottom,.archive-conclusion{display:none!important}.shell{width:100%!important}.capsule-cover{min-height:260px;background:white!important;border:1px solid #888}.capsule-cover h1,.capsule-cover h1 em,h2,h3,.archive-entry-year strong{color:black!important}.capsule-archive{padding:30px 0}.archive-entry{page-break-inside:avoid}.archive-entry p,p,.eyebrow{color:#333!important}}
+
+
+/* AREYOURARE 2.1 — UX polish: fluid mobile layout, editorial motion, accessible reading. */
+:root{color-scheme:dark}
+.site{overflow-x:clip;overflow-y:visible}
+.home-hero>*,.how-wrap>*,.feature-grid>*,.capsule-promo>*,.faq>*{min-width:0}
+.home-hero{position:relative}
+.home-hero:before{content:"";position:absolute;width:min(68vw,800px);aspect-ratio:1;right:-22%;top:-18%;border-radius:50%;background:radial-gradient(circle,rgba(224,186,125,.045),transparent 68%);pointer-events:none}
+.home-hero h1{text-wrap:balance}
+.hero-intro{text-wrap:pretty}
+#birthday-form{scroll-margin-top:32px}
+.skip-link{position:absolute;z-index:110;top:-100px;left:14px;padding:12px 18px;background:var(--gold);color:#080a0c;font-size:13px;font-weight:700}
+.skip-link:focus{top:12px}
+.site-header:after{content:"";position:absolute;inset:auto 0 0;height:1px;background:linear-gradient(90deg,transparent,rgba(224,186,125,.38),transparent);pointer-events:none}
+.birthday-fields{transition:border-color .3s,box-shadow .3s}
+.birthday-fields:focus-within{border-color:rgba(224,186,125,.75);box-shadow:0 0 0 3px rgba(224,186,125,.07),0 18px 55px rgba(0,0,0,.3)}
+.birthday-fields input{min-width:0}
+.hero-portal:before{content:"";position:absolute;inset:7%;border-radius:50%;background:radial-gradient(circle,rgba(224,186,125,.08),transparent 65%);filter:blur(22px);pointer-events:none}
+.portal-centered{position:relative}.portal-centered strong{text-shadow:0 0 54px rgba(224,186,125,.09)}
+.showcase{overflow:clip}.showcase-story{isolation:isolate}
+.showcase-moon{box-shadow:inset -22px -18px 35px rgba(0,0,0,.34),0 0 75px rgba(196,202,214,.13)}
+.showcase-moon:after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 28% 33%,rgba(36,48,58,.36) 0 5%,transparent 6%),radial-gradient(circle at 65% 53%,rgba(25,38,49,.35) 0 8%,transparent 9%),radial-gradient(circle at 42% 73%,rgba(27,37,45,.29) 0 6%,transparent 7%)}
+.feature-card{overflow:hidden}
+.feature-card:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .4s}
+.feature-card:hover:after,.feature-card:focus-within:after{transform:scaleX(1)}
+/* Critical bug fix: four children were auto-placed into three columns, creating a 42px paragraph. */
+.how-steps>div{grid-template-columns:36px minmax(0,1fr) 26px;column-gap:16px;row-gap:5px;align-items:start}
+.how-steps>div>span{grid-column:1;grid-row:1/3;padding-top:2px}
+.how-steps>div>strong{grid-column:2;grid-row:1;min-width:0;line-height:1.4}
+.how-steps>div>p{grid-column:2;grid-row:2;min-width:0;max-width:40ch;overflow-wrap:normal;margin:0;line-height:1.65}
+.how-steps>div>svg{grid-column:3;grid-row:1/3;justify-self:end}
+.book-stage{perspective:850px}.book-cover{backface-visibility:hidden;transition:transform .5s,box-shadow .5s}
+.book-stage:hover .book-cover{transform:rotate(-3deg) translateY(-7px) rotateY(5deg);box-shadow:-16px 32px 0 #0e0c0a,0 48px 90px rgba(0,0,0,.7)}
+.faq summary{transition:color .2s}.faq summary:hover{color:var(--gold)}
+.faq details[open]{border-color:rgba(224,186,125,.3)}
+.landing-progress{position:fixed;z-index:100;top:0;left:0;height:2px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:left;pointer-events:none;box-shadow:0 0 12px rgba(224,186,125,.5)}
+@keyframes archive-reveal{from{opacity:.3;transform:translate3d(0,20px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes shimmer-star{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes halo-breathe{0%,100%{opacity:.45;transform:scale(.97)}50%{opacity:.85;transform:scale(1.04)}}
+@keyframes moon-drift{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-7px,8px,0)}}
+@keyframes book-symbol{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:no-preference){
+.motion-in{animation:archive-reveal .72s cubic-bezier(.22,.7,.25,1) both}
+.hero-content .eyebrow{animation:archive-reveal .68s both}
+.home-hero h1{animation:archive-reveal .76s .08s both}
+.hero-intro{animation:archive-reveal .76s .17s both}
+.hero-content .birthday-form{animation:archive-reveal .78s .24s both}
+.hero-trust{animation:archive-reveal .8s .33s both}
+.hero-portal:before{animation:halo-breathe 9s ease-in-out infinite}
+.portal-dot,.portal-cross{animation:shimmer-star 4s ease-in-out infinite alternate}
+.portal-dot-b{animation-delay:1.5s}
+.showcase-moon{animation:moon-drift 12s ease-in-out infinite}
+.book-sun{animation:book-symbol 90s linear infinite}
+.button-primary svg,.nav-action svg,.inline-link svg{transition:transform .25s}
+.button-primary:hover svg,.nav-action:hover svg,.inline-link:hover svg{transform:translate(3px,-3px)}
+}
+@media(max-width:1050px) and (min-width:761px){.how-wrap{gap:38px}.capsule-promo{gap:42px}}
+@media(max-width:760px){
+.shell,.site-header{width:min(calc(100% - 36px),1240px)}
+.home-hero{padding-top:34px;padding-bottom:38px;gap:16px}
+.home-hero h1{font-size:clamp(41px,10.4vw,62px);line-height:1.055;margin:15px 0 17px;letter-spacing:-.045em}
+.home-hero .eyebrow{font-size:9px;letter-spacing:.14em;gap:7px}
+.hero-intro{font-size:13px;line-height:1.68;margin-bottom:22px;max-width:43ch}
+.birthday-form label{margin-bottom:9px}
+.birthday-fields{border-radius:8px}
+.birthday-fields .button-primary{min-height:50px}
+.hero-trust{margin-top:15px;gap:7px 13px;font-size:10px;line-height:1.5}
+.hero-portal{min-height:290px;max-width:340px;margin:12px auto 0}
+.portal-ring{width:286px;height:286px}.ring-two{width:238px;height:238px}.ring-three{width:158px;height:158px}
+.portal-centered strong{font-size:76px}.portal-centered em{font-size:14px}.portal-centered small{font-size:7px;letter-spacing:.13em}
+.portal-line{margin:15px 0}.portal-cross{left:14%;top:10%;font-size:17px}.portal-year{font-size:10px}
+.ticker div{padding:13px 0;font-size:9px;letter-spacing:.2em}.ticker b{padding:0 25px}
+.intro-section{padding:62px 0 28px}
+.intro-section h2,.section-heading h2,.how-wrap h2,.capsule-promo h2,.faq h2{font-size:clamp(41px,9.5vw,59px);line-height:1.055}
+.intro-section p{font-size:13px;line-height:1.7;margin-top:18px}
+.showcase-date{padding:25px;min-height:215px}.showcase-day{font-size:105px}.showcase-month{font-size:32px}
+.showcase-story{min-height:355px;padding:25px}.showcase-overlay h3{font-size:clamp(36px,10vw,48px)}.showcase-overlay p{font-size:12px;line-height:1.65}
+.section-space{padding:64px 0}.feature-grid{margin-top:30px}
+.feature-card{min-height:0;padding:25px}.feature-card-head{margin-bottom:27px}.feature-card h3{font-size:29px}.feature-card p{max-width:39ch;line-height:1.65}
+.how-section{padding:65px 0}.how-steps{margin-top:27px}
+.how-steps>div{grid-template-columns:28px minmax(0,1fr) 23px;gap:5px 12px;padding:20px 0}
+.how-steps strong{font-size:15px}.how-steps p{font-size:12px;line-height:1.6}.how-steps svg{width:21px}
+.capsule-promo{padding:68px 0 76px}.book-stage{min-height:360px}.book-cover{width:225px;height:337px}
+.book-sun{font-size:42px}.book-date{font-size:85px}.book-date em{font-size:48px}
+.capsule-promo-text{margin-top:30px}.capsule-promo-text ul{padding-top:7px}.capsule-promo-text li{padding:11px 0;line-height:1.5}
+.price-line{margin-top:25px}
+.faq{padding:5px 0 65px}.faq>div:last-child{margin-top:25px}.faq details{padding:19px 0}
+.last-word{padding:75px 18px}.last-word h2{font-size:clamp(43px,10.1vw,63px)}
+}
+@media(max-width:380px){
+.site-header{gap:7px}.brand{font-size:10px;gap:6px;letter-spacing:.09em}.nav-action{font-size:10px!important;gap:5px}
+.home-hero h1{font-size:39px}
+.hero-portal{min-height:265px}.portal-ring{width:260px;height:260px}.ring-two{width:214px;height:214px}.ring-three{width:143px;height:143px}.portal-centered strong{font-size:70px}
+}
+@media(prefers-reduced-motion:reduce){.motion-in,.portal-dot,.portal-cross,.showcase-moon,.book-sun,.hero-portal:before{animation:none!important}}
+@media print{.landing-progress{display:none!important}}

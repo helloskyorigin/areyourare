@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowUpRight, CalendarDays, Globe2, History, Sparkles, Clock3, BookOpen, HeartHandshake, ChevronDown, ShieldCheck } from 'lucide-react';
 import { SiteHeader, SiteFooter } from '@/components/v2/Brand';
 import { BirthdayForm } from '@/components/v2/BirthdayForm';
+import { LandingMotion } from '@/components/v2/LandingMotion';
 
 const reasons = [
  {index:'01',icon:History,kicker:'THE MOMENTS',title:'A day that made history.',text:'Travel beyond your birth year. Discover the important events that share your calendar date across centuries.'},
@@ -10,9 +11,10 @@ const reasons = [
 ];
 export default function HomePage() {
  return <div className="site">
+  <LandingMotion/>
   <SiteHeader/>
-  <main>
-   <section className="home-hero shell">
+  <main id="main-content">
+   <section className="home-hero shell" id="start">
     <div className="hero-content">
      <div className="eyebrow"><span className="eyebrow-glyph">✳</span> A DIFFERENT WAY TO DISCOVER YOUR DAY</div>
      <h1>The world has a story.<br/><em>So does your birthday.</em></h1>
@@ -34,18 +36,18 @@ export default function HomePage() {
      <a href="https://en.wikipedia.org/wiki/Apollo_11" target="_blank" rel="noopener noreferrer">View the Wikipedia record <ArrowUpRight size={16}/></a></div></div>
    </section>
    <section className="section-space shell"><div className="section-heading"><span className="eyebrow">02 / THE DISCOVERIES</span><h2>A little wonder,<br/><em>waiting to be found.</em></h2></div><div className="feature-grid">{reasons.map(({index,icon:Icon,kicker,title,text})=><article className="feature-card" key={index}><div className="feature-card-head"><span>{index} / 03</span><Icon size={27} strokeWidth={1.3}/></div><span className="eyebrow">{kicker}</span><h3>{title}</h3><p>{text}</p><span className="feature-mark">↗</span></article>)}</div></section>
-   <section className="how-section" id="how"><div className="shell how-wrap"><div><span className="eyebrow">03 / HOW IT WORKS</span><h2>All it takes <em>is a date.</em></h2><p>No birth time. No birth location. Just one date and a little curiosity.</p><Link className="inline-link" href="/discover">Explore your date <ArrowUpRight size={17}/></Link></div><div className="how-steps">
+   <section className="how-section" id="how"><div className="shell how-wrap"><div><span className="eyebrow">03 / HOW IT WORKS</span><h2>All it takes <em>is a date.</em></h2><p>No birth time. No birth location. Just one date and a little curiosity.</p><Link className="inline-link" href="/#birthday-form">Explore your date <ArrowUpRight size={17}/></Link></div><div className="how-steps">
     <div><span>01</span><strong>Enter your birthday</strong><p>Choose the day, month and year you were born.</p><CalendarDays size={23}/></div>
     <div><span>02</span><strong>Open the historical archive</strong><p>See Wikipedia-sourced events and birthday connections.</p><History size={23}/></div>
     <div><span>03</span><strong>Make it your own</strong><p>Enjoy your free first discovery or create a complete Time Capsule.</p><Sparkles size={23}/></div></div></div></section>
-   <section className="capsule-promo shell" id="capsule"><div className="book-stage"><div className="book-cover"><div className="book-top"><span>AREYOURARE</span><span>VOL. 01</span></div><div className="book-sun">✳</div><span className="eyebrow">A PERSONAL ARCHIVE</span><div className="book-date">20<br/><em>July</em></div><div className="book-bottom">THE BIRTHDAY<br/>TIME CAPSULE</div></div></div><div className="capsule-promo-text"><span className="eyebrow">04 / GO BEYOND THE FIRST MOMENT</span><h2>Your day deserves <em>its own archive.</em></h2><p>Keep more than a birthday. Discover a curated collection of remarkable moments, historic lives and stories that share your day — all connected to their sources.</p><ul><li>✳ Full, source-linked historical timeline</li><li>✳ Notable people born on your date</li><li>✳ Exact birth-year events when documented</li><li>✳ Beautiful print-ready Time Capsule</li></ul><div className="price-line"><strong>$2</strong><span>ONE TIME · NO SUBSCRIPTION</span></div><Link className="button-primary" href="/discover">Discover my birthday first <ArrowUpRight size={18}/></Link></div></section>
+   <section className="capsule-promo shell" id="capsule"><div className="book-stage"><div className="book-cover"><div className="book-top"><span>AREYOURARE</span><span>VOL. 01</span></div><div className="book-sun">✳</div><span className="eyebrow">A PERSONAL ARCHIVE</span><div className="book-date">20<br/><em>July</em></div><div className="book-bottom">THE BIRTHDAY<br/>TIME CAPSULE</div></div></div><div className="capsule-promo-text"><span className="eyebrow">04 / GO BEYOND THE FIRST MOMENT</span><h2>Your day deserves <em>its own archive.</em></h2><p>Keep more than a birthday. Discover a curated collection of remarkable moments, historic lives and stories that share your day — all connected to their sources.</p><ul><li>✳ Full, source-linked historical timeline</li><li>✳ Notable people born on your date</li><li>✳ Exact birth-year events when documented</li><li>✳ Beautiful print-ready Time Capsule</li></ul><div className="price-line"><strong>$2</strong><span>ONE TIME · NO SUBSCRIPTION</span></div><Link className="button-primary" href="/#birthday-form">Discover my birthday first <ArrowUpRight size={18}/></Link></div></section>
    <section className="faq shell"><div><span className="eyebrow">05 / GOOD TO KNOW</span><h2>Curiosity looks <em>good on you.</em></h2></div><div>
     <details><summary>Is the first discovery really free? <ChevronDown size={17}/></summary><p>Yes. You get a featured historical event, a notable birthday connection when available, and a small timeline preview.</p></details>
     <details><summary>Are the stories real? <ChevronDown size={17}/></summary><p>Stories come from Wikipedia's On This Day archive. An anniversary can be from a different year than your birth. Every available source is linked.</p></details>
     <details><summary>What's in the $2 Time Capsule? <ChevronDown size={17}/></summary><p>More documented events and birthday connections, searchable timeline, birth-year matches when available and a print-ready keepsake. It is one-time, not a subscription.</p></details>
     <details><summary>Can I read the original Wikipedia article? <ChevronDown size={17}/></summary><p>Absolutely. We link to original article pages when Wikipedia provides them, and credit its contributors.</p></details>
    </div></section>
-   <section className="last-word"><span className="eyebrow">✳ YOUR STORY STARTS HERE</span><h2>Every birthday has <em>a backstory.</em></h2><p>Ready to discover yours?</p><Link href="/discover" className="button-primary">Explore my birthday <ArrowUpRight size={19}/></Link></section>
+   <section className="last-word"><span className="eyebrow">✳ YOUR STORY STARTS HERE</span><h2>Every birthday has <em>a backstory.</em></h2><p>Ready to discover yours?</p><Link href="/#birthday-form" className="button-primary">Explore my birthday <ArrowUpRight size={19}/></Link></section>
   </main><SiteFooter/>
  </div>;
 }
