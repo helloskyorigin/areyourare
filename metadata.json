@@ -1,6 +1,6 @@
 {
-  "name": "OUTLIER — Global Birth-Pattern Discovery",
-  "description": "Discover what makes your birth unusual. OUTLIER searches your birth-chart pattern against a global reference population to reveal your rarest statistical pattern.",
+  "name": "AREYOURARE — Your Birthday in History",
+  "description": "Discover remarkable real historical events and famous people connected to your birth date. Create a personal Birthday Time Capsule.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
