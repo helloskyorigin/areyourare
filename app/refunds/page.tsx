@@ -1,0 +1,5 @@
+import { SiteHeader,SiteFooter } from '@/components/v2/Brand';
+export default function RefundsPage(){return <div className="site"><SiteHeader/><main className="legal-page shell"><span className="eyebrow">AREYOURARE / PURCHASES</span><h1>Refunds &amp; <em>Support.</em></h1>
+<p>The Birthday Time Capsule is a one-time digital purchase. Refund eligibility depends on applicable consumer law and the payment provider's policies. These terms do not remove any mandatory statutory rights.</p>
+<h2>Need help opening a paid report?</h2><p>Purchased access is currently tied to the browser used during checkout. If payment succeeded but your Time Capsule doesn't open, or you believe you were charged incorrectly, contact us with the checkout email and receipt details. Never send card numbers or payment passwords.</p>
+<h2>Contact</h2><p>Email <a href="mailto:hello.skyorigin@gmail.com">hello.skyorigin@gmail.com</a> with the subject “AREYOURARE payment support”. We will review purchase issues and applicable refund requests.</p></main><SiteFooter/></div>;}

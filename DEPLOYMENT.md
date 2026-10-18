@@ -1,83 +1,41 @@
-# OUTLIER V1 — Production Deployment & Runbook
+# AREYOURARE V2 — Birthday History Discovery
 
-## Overview
-OUTLIER is a global consumer web application that identifies statistically unusual geometric patterns in birth charts against a verified baseline reference population ($N = 100,000$).
+AREYOURARE has been transformed from an astronomy-based rarity product into a Wikipedia-powered historical birthday experience. Routes in app/ now use lib/history.ts and lib/birthday.ts; older astronomy modules remain in the repository for possible archival reference but are no longer part of the live visitor journey.
 
----
+## Pages
+- / — Midnight Archive landing page with DOB-only discovery form
+- /discover — dedicated birthday entry fallback
+- /searching?date=YYYY-MM-DD — genuine loading/lookup experience
+- /result?date=YYYY-MM-DD — free source-linked discovery and $2 premium offer
+- /capsule?date=YYYY-MM-DD — server-verified purchased timeline, birthdays, exact-year matches, searchable archive and print-to-PDF
+- /privacy, /terms, /refunds — policy and support pages
 
-## 1. Environment Configuration
+## Data
+Wikipedia On This Day API: https://en.wikipedia.org/api/rest_v1/feed/onthisday/all/MM/DD. Fallback: https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/all/MM/DD. No fake events are generated. Historical anniversary dates are month+day across many years, NOT necessarily events in the birth year. Exact birth-year matches are separately displayed and may be empty. Attribution/source links included; check Wikimedia API and media licensing terms. Sources may be outdated or inaccurate.
 
-All environment configuration is strictly separated by runtime environment (`development`, `staging`, `production`, `test`). No production keys or secrets are committed to version control.
+## Required environment variables
+Copy .env.example. Set:
+- APP_URL=https://areyourare.ai.studio
+- DODO_MODE=test_mode (then live_mode ONLY after sandbox verified)
+- DODO_PAYMENTS_API_KEY (server only)
+- DODO_PRODUCT_ID (approved $2 one-time AREYOURARE product)
+- PURCHASE_COOKIE_SECRET (stable cryptographically random signing secret)
 
-| Variable | Description | Required in Production | Default |
-| :--- | :--- | :--- | :--- |
-| `NODE_ENV` | Runtime environment (`production` / `development` / `test`) | Yes | `development` |
-| `APP_URL` | Public origin URL used for CORS and canonical links | Yes | Cloud Run host |
-| `GEMINI_API_KEY` | Server-side API key for editorial explanation generation | Optional (fallback active) | `""` |
-| `RATE_LIMIT_MAX` | Max requests per IP window on sensitive endpoints | No | `30` |
-| `RATE_LIMIT_WINDOW_MS` | Sliding window duration in milliseconds | No | `60000` (1 min) |
-| `TIMEOUT_AI_MS` | Max execution timeout for AI calls | No | `4000` |
-| `TIMEOUT_CALCULATION_MS` | Max execution timeout for astronomical calculations | No | `2000` |
+Do not reuse unrelated products or commit credentials. Gateway must approve the product and merchant before live purchase.
 
----
+## Checkout / access security
+POST /api/checkout creates a server-controlled Dodo checkout for the requested birthday. It sets a signed, HttpOnly, SameSite=Lax cookie containing that checkout ID and DOB. On return, GET /api/payment-status checks Dodo's server-side checkout and payment status. GET /api/capsule repeats verification server-side before returning ANY extended archive data. Redirect URL parameters are not proof of payment.
 
-## 2. Calculation Versioning & Compatibility Matrix
+### Known V2 limitation
+This initial system does NOT implement account-based recovery, webhook-managed entitlements, durable purchase history, or a refund/chargeback event store. Browser cookie access expires after a maximum of 180 days and starting another checkout may replace the first cookie. Do not claim lifetime access or make live sales until end-to-end Dodo sandbox tests, refund handling, appropriate legal review, and report recovery strategy are considered. Check actual provider response fields against the merchant account and sandbox.
 
-Every discovery result object emitted by OUTLIER is tagged with explicit version identifiers ensuring complete mathematical reproducibility:
+## Validation
+Run locally:
+  npm install
+  npm run build
+  node --import tsx --test tests/birthday-v2.test.ts
 
-- **Calculation Version**: `1.0.0`
-- **Astronomy Engine Version**: `1.0.0`
-- **Pattern Engine Version**: `1.0.0`
-- **Pattern Registry Version**: `1.0`
-- **Reference Dataset Version**: `v1`
+Test ordinary DOB, 29 February, exact birth-year absent, Wikimedia outages, free endpoint content isolation, Dodo unsuccessful and successful sandbox checkout, and direct premium endpoint bypass attempts. Test 320px, 375px, 768px, 1440px layouts. Use browser print for capsule PDF.
 
-### Rollback Procedure
-If a dataset or calculation engine update is rolled back:
-1. Revert `REFERENCE_POPULATION_V1` in `lib/rarity/dataset.ts`.
-2. Update the `versions` object in `lib/config/env.ts`.
-3. The server's startup integrity check (`lib/rarity/integrity.ts`) will automatically fail safely if any schema or version mismatch is detected, preventing corrupted calculations from reaching users.
-
----
-
-## 3. Security Architecture
-
-1. **Rate Limiting**: Sliding-window rate limiter per client IP protecting `/api/discover`. Exceeded limits return HTTP 429 with `Retry-After` headers.
-2. **Abuse Protection**: Maximum payload size restricted to 10 KB; string length limits enforced across all inputs; malformed JSON rejected with HTTP 400.
-3. **CORS & Origin Validation**: Permitted origins strictly validated in production against `APP_URL` and authorized GCP domains.
-4. **HTTP Security Headers**: Configured across all routes:
-   - `X-Content-Type-Options: nosniff`
-   - `Referrer-Policy: strict-origin-when-cross-origin`
-   - `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()`
-   - `X-Frame-Options: SAMEORIGIN`
-   - `Strict-Transport-Security` (in production HTTPS)
-
----
-
-## 4. Privacy Guarantees (V1)
-
-- **Zero PII Collection**: OUTLIER does not collect names, email addresses, accounts, phone numbers, or social profiles.
-- **Zero Persistent Birth Storage**: User birth details exist only in memory during the request lifecycle and in the user's local `sessionStorage`.
-- **Sanitized Logging**: Production logs strip all birth dates, birth times, coordinates, and AI prompt strings. Only random `requestId` values and technical status codes are emitted.
-- **Privacy-Safe Share Cards**: Default share assets intentionally omit private birth locations and timestamps, focusing solely on the discovered percentile and pattern name.
-
----
-
-## 5. Health & Observability Endpoints
-
-- `GET /api/health` — Lightweight liveness check returning uptime and status.
-- `GET /api/health?ready=true` — Deep readiness probe validating dataset integrity, pattern registry alignment, and engine health.
-
----
-
-## 6. Build & Test Commands
-
-```bash
-# Linting
-npm run lint
-
-# Production Build
-npm run build
-
-# Start Production Server
-npm start
-```
+## Privacy
+No account or birth location needed for free history searches. Dodo payment metadata associates DOB with checkout. Verify and adjust policies for your legal jurisdiction before launch.

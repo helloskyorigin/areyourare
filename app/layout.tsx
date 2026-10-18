@@ -1,52 +1,19 @@
-import type {Metadata} from 'next';
-import {Cormorant_Garamond, Plus_Jakarta_Sans} from 'next/font/google';
-import { AdSenseScript } from '@/components/ads/AdSenseScript';
+import type { Metadata } from 'next';
+import { Cormorant_Garamond, Manrope } from 'next/font/google';
 import './globals.css';
-
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
-  variable: '--font-serif',
-  display: 'swap',
-});
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-
+const display = Cormorant_Garamond({ subsets:['latin'], weight:['400','500','600','700'],style:['normal','italic'],display:'swap',variable:'--font-display' });
+const sans = Manrope({ subsets:['latin'],display:'swap',variable:'--font-sans' });
 export const metadata: Metadata = {
-  title: 'AREYOURARE — Global Birth-Pattern Discovery',
-  description:
-    'Find what makes your birth unusual. AREYOURARE searches your birth-chart pattern against a global reference population.',
-  openGraph: {
-    title: 'AREYOURARE — Global Birth-Pattern Discovery',
-    description:
-      'Find what makes your birth unusual. Enter your date, time and place to discover your rarest pattern.',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'AREYOURARE — Global Birth-Pattern Discovery',
-    description:
-      'Find what makes your birth unusual. Enter your date, time and place to discover your rarest pattern.',
-  },
+ metadataBase:new URL('https://areyourare.ai.studio'),
+ title:'AREYOURARE — The World Has a Story. So Does Your Birthday.',
+ description:'What happened on the date you were born? Discover historic events, notable birthdays and your own Birthday Time Capsule. Your first discovery is free.',
+ openGraph:{title:'AREYOURARE — Your Birthday in History',description:'One date. Centuries of extraordinary stories. Explore the history behind your birthday.',type:'website',url:'https://areyourare.ai.studio'},
+ twitter:{card:'summary_large_image',title:'AREYOURARE — Your Birthday in History',description:'Discover what made history on your birthday.'},
+ robots:{index:true,follow:true},
 };
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en" className={`${cormorant.variable} ${jakarta.variable} scroll-smooth dark`}>
-      <body className="bg-[#050506] text-[#E8E6E3] font-sans antialiased selection:bg-[#EAE6DF] selection:text-[#0A0A0B] overflow-x-hidden min-h-screen">
-        <AdSenseScript />
-        {children}
-      </body>
-    </html>
-  );
+export default function RootLayout({children}:{children:React.ReactNode}){
+ return <html lang="en" className={display.variable+' '+sans.variable}>
+  <head><style>{':root{--serif:var(--font-display),Georgia,serif}'}</style></head>
+  <body>{children}</body>
+ </html>;
 }
