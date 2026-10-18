@@ -12,6 +12,7 @@ const reasons = [
 export default function HomePage() {
  return <div className="site">
   <LandingMotion/>
+  <a className="skip-link" href="#main-content">Skip to content</a>
   <SiteHeader/>
   <main id="main-content">
    <section className="home-hero shell" id="start">
