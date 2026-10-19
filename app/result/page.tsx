@@ -104,7 +104,7 @@ function ResultExperience() {
   if (loading) {
     return <div className="site discovery-loading">
       <span className="eyebrow">✳ YOUR DAY IN HISTORY</span>
-      <div className="discovery-loading-ring" aria-hidden="true"/>
+      <div className="discovery-loading-line" aria-hidden="true"><span/></div>
       <h1>Preparing your <em>first discovery.</em></h1>
       <p>Retrieving historical records from the archive…</p>
     </div>;
@@ -157,15 +157,17 @@ function ResultExperience() {
               <div className="discovery-born"><span>YOUR BIRTH YEAR</span><strong>{birthday.year}</strong><small>Historical anniversaries may be from other years.</small></div>
             </div>
             <div className="discovery-hero-art" aria-hidden="true">
-              <div className="discovery-art-halo"/>
-              <div className="discovery-art-ring art-ring-one"/>
-              <div className="discovery-art-ring art-ring-two"/>
-              <div className="discovery-art-ring art-ring-three"/>
-              <span className="discovery-art-star">✳</span>
-              <span className="discovery-art-inscription inscription-top">THE HUMAN ARCHIVE</span>
-              <span className="discovery-art-inscription inscription-bottom">EVERY DATE HAS A BACKSTORY</span>
-              <span className="discovery-art-dot dot-one"/>
-              <span className="discovery-art-dot dot-two"/>
+              <div className="discovery-index-card">
+                <div className="discovery-index-top"><span>AREYOURARE / ARCHIVE</span><span>VOL. 01</span></div>
+                <div className="discovery-index-label">A DATE THROUGH HISTORY</div>
+                <div className="discovery-index-date"><strong>{day}</strong><em>{month}</em></div>
+                <div className="discovery-index-divider"><span>01 / FEATURED MOMENT</span><span>✳</span></div>
+                <div className="discovery-index-feature">
+                  <strong>{history.featured.year}</strong>
+                  <span>{history.featured.title}</span>
+                </div>
+                <div className="discovery-index-bottom"><span>DOCUMENTED ANNIVERSARIES</span><span>YOUR HUMAN ARCHIVE</span></div>
+              </div>
             </div>
           </div>
           <div className="discovery-metrics" aria-label="Entries from the Wikipedia On This Day feed">

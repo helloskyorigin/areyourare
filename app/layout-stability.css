@@ -1,0 +1,359 @@
+/* AREYOURARE V2 — responsive editorial archive.
+   This stylesheet loads after the original component styles.
+   All visuals use archive folios and historical year ledgers, never orbital rings. */
+
+/* Universal layout containment and readable type. */
+.site{overflow-x:clip}
+.site main,.site section,.site article,.site .shell{min-width:0}
+.site h1,.site h2,.site h3{max-width:100%;overflow-wrap:break-word;text-wrap:balance}
+.site p{overflow-wrap:break-word}
+.site a,.site button{touch-action:manipulation}
+.site .button-primary{white-space:normal;text-align:center;max-width:100%}
+.site .eyebrow{max-width:100%;overflow-wrap:break-word}
+.site-header{min-width:0}
+.site-header .brand{min-width:0}
+.site-header nav{flex-shrink:0}
+.home-hero,.showcase,.intro-section,.feature-grid,.how-wrap,.capsule-promo,.faq,
+.discovery-hero-grid,.discovery-feature-grid,.discovery-connection-grid,
+.discovery-chronicle-grid,.premium-wrap,.discovery-finale,.journey-grid{min-width:0}
+.home-hero>*,.how-wrap>*,.capsule-promo>*,.faq>*,
+.discovery-hero-grid>*,.discovery-feature-grid>*,.discovery-connection-grid>*,
+.discovery-chronicle-grid>*,.premium-wrap>*,.discovery-finale>*,.journey-grid>*{min-width:0}
+
+/* 01 — Landing: archival folio in place of every former orbital hero element. */
+.home-hero{min-height:0;grid-template-columns:minmax(0,1.11fr) minmax(300px,.89fr);gap:clamp(32px,4.6vw,80px);padding-top:clamp(37px,5.2vw,75px);padding-bottom:clamp(45px,6vw,86px)}
+.home-hero h1{font-size:clamp(45px,5.2vw,78px);line-height:1.045;margin:19px 0 20px}
+.home-hero .hero-intro{max-width:51ch;margin-bottom:25px;line-height:1.75}
+.hero-archive{position:relative;width:100%;min-width:0;max-width:500px;margin:0 auto;isolation:isolate;display:flex;align-items:center;justify-content:center;padding:18px 19px 24px}
+.hero-archive:before{content:"";position:absolute;inset:8% 2% 1% 9%;z-index:-1;border:1px solid rgba(224,186,125,.19);background:linear-gradient(142deg,#201c17,#0d0e0e 72%);transform:translate(12px,12px)}
+.hero-archive-frame{position:relative;overflow:hidden;min-width:0;width:100%;padding:clamp(21px,2.6vw,35px);border:1px solid rgba(224,186,125,.43);background:linear-gradient(148deg,#201c16 1%,#171713 35%,#0e1113 96%);box-shadow:0 28px 65px rgba(0,0,0,.35),inset 0 0 0 7px rgba(224,186,125,.025)}
+.hero-archive-frame:before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(224,186,125,.75),transparent)}
+.hero-archive-meta,.hero-archive-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--gold);letter-spacing:.14em;font:9px monospace}
+.hero-archive-issue{color:#96928c;font-size:9px;letter-spacing:.18em;margin-top:48px;line-height:1.5}
+.hero-archive-date{display:flex;align-items:baseline;gap:17px;min-width:0;margin:12px 0 23px}
+.hero-archive-date strong{font:clamp(118px,14vw,174px)/.89 var(--serif);font-weight:400;letter-spacing:-.07em;color:var(--paper)}
+.hero-archive-date em{font:italic clamp(42px,5.1vw,66px)/1 var(--serif);letter-spacing:-.04em;color:var(--gold)}
+.hero-archive-rule{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(224,186,125,.33);padding-bottom:13px;color:var(--gold);font-size:10px;letter-spacing:.17em}
+.hero-archive-entries{display:grid;gap:0;padding-bottom:34px}
+.hero-archive-entries>div{display:grid;grid-template-columns:62px minmax(0,1fr);gap:13px;align-items:baseline;border-bottom:1px solid rgba(241,226,204,.11);padding:15px 0;font-size:12px;line-height:1.55;color:var(--paper)}
+.hero-archive-entries time{color:var(--gold);font:18px var(--serif)}
+.hero-archive-entries span{min-width:0;overflow-wrap:break-word}
+.hero-archive-bottom{padding-top:10px;border-top:1px solid rgba(241,226,204,.15);color:#989793;font-size:8px}
+.hero-archive-bottom span:last-child{color:var(--gold);font-size:18px}
+.hero-archive-margin{position:absolute;right:1px;bottom:5px;font:8px monospace;letter-spacing:.19em;color:rgba(224,186,125,.55);transform:rotate(-90deg) translateX(100%);transform-origin:right bottom;white-space:nowrap;pointer-events:none}
+/* Fix excessive blank spaces and uneven editorial sections. */
+.intro-section{padding-top:clamp(54px,7vw,95px);padding-bottom:clamp(24px,4vw,50px);gap:clamp(20px,4vw,65px)}
+.intro-section h2,.section-heading h2,.how-wrap h2,.capsule-promo h2,.faq h2{font-size:clamp(40px,4.6vw,67px);line-height:1.08}
+.showcase{min-height:0;grid-template-columns:minmax(0,.4fr) minmax(0,.6fr)}
+.showcase-date,.showcase-story{min-width:0}
+.showcase-date{padding:clamp(24px,3vw,37px)}
+.showcase-day{font-size:clamp(100px,12vw,152px)}
+.showcase-overlay h3{font-size:clamp(37px,4.2vw,54px);line-height:1.09;overflow-wrap:anywhere}
+.showcase-story{min-height:410px;padding:clamp(28px,4vw,55px)}
+.section-space{padding-top:clamp(60px,7vw,105px);padding-bottom:clamp(60px,7vw,100px)}
+.feature-grid{margin-top:clamp(25px,4vw,45px)}
+.feature-card{min-height:275px;padding:clamp(25px,2.8vw,38px)}
+.feature-card-head{margin-bottom:clamp(25px,3vw,44px)}
+.feature-card h3{font-size:clamp(25px,2.5vw,35px);overflow-wrap:break-word}
+.how-section{padding:clamp(60px,7vw,96px) 0}
+.how-wrap{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(26px,5vw,70px)}
+.how-steps>div{grid-template-columns:34px minmax(0,1fr) 27px;column-gap:clamp(12px,1.8vw,20px);row-gap:8px;padding:21px 0}
+.how-steps>div>span{grid-column:1;grid-row:1 / 3}
+.how-steps>div>strong{grid-column:2;grid-row:1;min-width:0;overflow-wrap:break-word}
+.how-steps>div>p{grid-column:2;grid-row:2;min-width:0;max-width:45ch;overflow-wrap:break-word}
+.how-steps>div>svg{grid-column:3;grid-row:1 / 3}
+.capsule-promo{padding:clamp(70px,8vw,120px) 0;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(35px,5vw,80px)}
+.book-stage{min-height:450px;min-width:0}
+.book-cover{width:min(80%,280px);height:415px}
+.book-sun{margin:28px 0 12px}
+.faq{padding:10px 0 clamp(65px,7vw,105px);grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,70px)}
+.faq summary{min-height:28px;line-height:1.5}
+.faq summary svg{flex-shrink:0}
+.last-word{padding:clamp(67px,7vw,110px) 20px}
+.last-word h2{font-size:clamp(44px,6vw,75px)}
+.site-footer{gap:22px}
+
+/* 02 — Searching: vintage date ledger instead of rotating circles. */
+.journey-main{min-height:calc(100svh - 86px);padding-top:20px;padding-bottom:23px}
+.journey-grid{grid-template-columns:minmax(0,1fr) minmax(0,.95fr);align-items:center;gap:clamp(25px,4.5vw,66px);padding:25px 0 31px}
+.journey-copy h1{font-size:clamp(45px,5vw,78px);line-height:1.06;margin:17px 0 19px}
+.journey-description{line-height:1.65;margin-bottom:19px}
+.journey-current{padding:15px;gap:11px}
+.journey-checklist{margin-top:13px}
+.journey-check-row{padding:10px 0}
+.journey-scene{min-height:0;padding:clamp(18px,2.5vw,27px);background:linear-gradient(140deg,#201c17,#101214 75%);overflow:hidden}
+.journey-scene:before{opacity:.11}
+.journey-scene:after{display:none}
+.journey-scene-top,.journey-scene-bottom{line-height:1.6}
+.journey-scene-top{padding-bottom:17px}
+.journey-scene-bottom{padding-top:15px}
+.journey-ledger{position:relative;min-height:360px;display:flex;flex-direction:column;justify-content:space-between;padding:18px 20px 17px;border-inline:1px solid rgba(224,186,125,.17);overflow:hidden}
+.journey-ledger:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 54px,rgba(224,186,125,.055) 55px,transparent 56px);pointer-events:none}
+.journey-ledger-label{display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;z-index:1;font:9px monospace;letter-spacing:.16em;color:#ada394}
+.journey-ledger-label span:last-child{color:var(--gold);font-size:21px}
+.journey-date-card{min-height:0;flex:1;padding:15px 0 20px}
+.journey-date-card>span:first-child{font-size:9px}
+.journey-date-card strong{font-size:clamp(95px,10vw,143px);margin:12px 0 5px}
+.journey-date-card em{font-size:clamp(16px,2vw,22px);letter-spacing:.19em;overflow-wrap:anywhere}
+.journey-date-rule{margin:20px 0 12px}
+.journey-ledger-years{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;gap:12px;border-top:1px solid rgba(224,186,125,.2);padding-top:13px;color:#807e78;font:9px monospace;letter-spacing:.1em}
+.journey-ledger-scan{position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(224,186,125,.5),transparent);pointer-events:none;opacity:.75}
+.journey-footer{flex-wrap:wrap;gap:8px}
+.journey-back{margin-top:18px}
+
+/* 03 — Result: typographic historical index instead of the orbital artwork. */
+.discovery-loading-line{position:relative;width:min(210px,60vw);height:2px;overflow:hidden;margin-top:37px;background:rgba(224,186,125,.18)}
+.discovery-loading-line span{position:absolute;inset:0;background:var(--gold);transform:translateX(-100%)}
+.discovery-hero{padding-top:23px}
+.discovery-hero-grid{min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:clamp(22px,4vw,65px);padding:42px 0}
+.discovery-hero-copy{padding:0}
+.discovery-hero-copy h1{margin:18px 0 20px}
+.discovery-hero-copy h1 span{font-size:clamp(108px,12.5vw,178px);line-height:.9}
+.discovery-hero-copy h1 em{font-size:clamp(70px,6.8vw,101px);line-height:1.06}
+.discovery-born{margin-top:22px}
+.discovery-hero-art{height:auto;max-height:none;min-width:0;width:100%;display:block}
+.discovery-index-card{position:relative;width:100%;max-width:450px;margin-inline:auto;min-width:0;min-height:430px;padding:clamp(22px,2.7vw,36px);display:flex;flex-direction:column;background:linear-gradient(145deg,#262119,#151613 72%,#0e1114);border:1px solid rgba(224,186,125,.43);box-shadow:17px 18px 0 rgba(224,186,125,.045),0 28px 65px rgba(0,0,0,.3)}
+.discovery-index-card:before{content:"";position:absolute;inset:8px;border:1px solid rgba(224,186,125,.1);pointer-events:none}
+.discovery-index-top,.discovery-index-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;font:9px monospace;letter-spacing:.11em;color:var(--gold)}
+.discovery-index-label{margin-top:39px;color:#a4a09a;font-size:9px;letter-spacing:.17em}
+.discovery-index-date{display:flex;align-items:baseline;gap:14px;margin:11px 0 18px;min-width:0}
+.discovery-index-date strong{color:var(--paper);font:clamp(95px,10vw,142px)/.9 var(--serif);letter-spacing:-.075em}
+.discovery-index-date em{color:var(--gold);font:italic clamp(39px,4.6vw,60px)/1 var(--serif);letter-spacing:-.045em;overflow-wrap:break-word}
+.discovery-index-divider{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid rgba(224,186,125,.23);border-top:1px solid rgba(224,186,125,.23);font:9px monospace;color:#a99674;letter-spacing:.12em}
+.discovery-index-divider span:last-child{font-size:20px;color:var(--gold)}
+.discovery-index-feature{display:flex;flex-direction:column;gap:8px;padding:19px 0 26px;min-width:0}
+.discovery-index-feature strong{font:32px/1 var(--serif);color:var(--gold)}
+.discovery-index-feature>span{font-size:clamp(15px,1.8vw,20px);line-height:1.32;color:var(--paper);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.discovery-index-bottom{margin-top:auto;padding-top:14px;border-top:1px solid rgba(224,186,125,.17);color:#8e8a85;font-size:8px;line-height:1.3}
+.discovery-metrics>div{padding:17px 13px}
+.discovery-metrics strong{font-size:31px}
+.discovery-feature{padding-top:clamp(52px,6vw,84px);padding-bottom:clamp(53px,6vw,85px)}
+.discovery-feature-grid{margin-top:clamp(25px,3.5vw,43px)}
+.discovery-feature-copy h2{font-size:clamp(37px,4.2vw,64px);line-height:1.09}
+.discovery-event-year{font-size:clamp(85px,9vw,138px);margin-top:14px}
+.discovery-feature-photo{min-height:400px}
+.discovery-connection{padding:clamp(55px,6vw,85px) 0}
+.discovery-connection-intro h2,.discovery-chronicle-head h2,.discovery-premium-intro h2,.discovery-finale h2{font-size:clamp(40px,4.5vw,70px);line-height:1.08}
+.discovery-person-card{min-height:0}
+.discovery-person-details{min-width:0}
+.discovery-person-details h3,.discovery-person-empty h3{overflow-wrap:break-word}
+.discovery-chronicle{padding-top:clamp(59px,6vw,90px);padding-bottom:clamp(59px,6vw,90px)}
+.discovery-chronicle-grid{margin-top:31px}
+.discovery-chronicle-grid .moment-card{min-height:275px;padding:clamp(23px,3vw,34px)}
+.discovery-chronicle-grid .moment-card h3{font-size:clamp(25px,2.5vw,35px)}
+.discovery-premium-section{padding:clamp(62px,6vw,93px) 0}
+.discovery-premium-intro{margin-bottom:35px}
+.discovery-premium-wrap{min-height:0!important}
+.discovery-finale{padding-top:clamp(60px,6vw,88px);padding-bottom:clamp(60px,6vw,88px)}
+
+/* 04 — Capsule and DOB page: remove fixed-height blank areas and prevent text collisions. */
+.discover-center{min-height:calc(100svh - 160px);padding-top:45px;padding-bottom:56px}
+.discover-center h1{font-size:clamp(46px,5.6vw,78px)}
+.birthday-form{width:100%}
+.birthday-fields{min-width:0}
+.birthday-fields input{min-width:0;max-width:100%}
+.capsule-cover{min-height:clamp(410px,49vw,600px);padding:clamp(23px,3vw,37px);margin-top:22px}
+.capsule-cover h1{font-size:clamp(65px,8.5vw,130px);line-height:1.04;overflow-wrap:anywhere}
+.capsule-cover-top,.capsule-cover-bottom{min-width:0;flex-wrap:wrap;line-height:1.7}
+.capsule-summary{padding:clamp(25px,4vw,50px) 0}
+.capsule-summary strong{font-size:clamp(43px,5.5vw,62px)}
+.capsule-archive{padding:clamp(55px,6vw,85px) 0}
+.capsule-archive-head h2{font-size:clamp(42px,5vw,67px)}
+.capsule-tabs{margin:28px 0 22px}
+.capsule-archive .archive-entry{grid-template-columns:minmax(70px,100px) minmax(0,1fr) 40px;gap:clamp(12px,2vw,25px);align-items:start;padding:24px 0}
+.archive-entry h3{font-size:clamp(22px,2.4vw,30px);overflow-wrap:break-word}
+.archive-entry-year strong{font-size:clamp(25px,3vw,37px)}
+.archive-conclusion{padding-bottom:clamp(50px,6vw,75px)}
+
+/* Responsive layout: tablet, mobile, and small 320px devices. */
+@media(max-width:1050px) and (min-width:761px){
+ .home-hero{grid-template-columns:minmax(0,1fr) minmax(265px,.85fr);gap:27px}
+ .hero-archive-frame{padding:20px}
+ .hero-archive-issue{margin-top:25px}
+ .hero-archive-entries{padding-bottom:14px}
+ .hero-archive-date strong{font-size:108px}
+ .hero-archive-date em{font-size:44px}
+ .journey-grid{grid-template-columns:minmax(0,1fr) minmax(0,.95fr)}
+ .journey-ledger{min-height:340px}
+ .discovery-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,.9fr)}
+ .discovery-index-card{min-height:395px}
+ .discovery-index-date strong{font-size:98px}
+}
+@media(max-width:760px){
+ .shell,.site-header{width:min(calc(100% - 32px),1240px)}
+ .home-hero{display:flex;flex-direction:column;gap:23px;padding-top:28px;padding-bottom:43px}
+ .home-hero h1{font-size:clamp(40px,10.5vw,62px);line-height:1.06;margin:12px 0 16px}
+ .home-hero .hero-intro{font-size:13px;line-height:1.65;margin-bottom:21px}
+ .hero-archive{max-width:430px;padding:5px 12px 17px}
+ .hero-archive-frame{padding:22px}
+ .hero-archive-issue{margin-top:22px}
+ .hero-archive-date{margin:10px 0 15px}
+ .hero-archive-date strong{font-size:clamp(106px,26vw,154px)}
+ .hero-archive-date em{font-size:clamp(43px,11vw,62px)}
+ .hero-archive-entries{padding-bottom:12px}
+ .hero-archive-entries>div{padding:10px 0;font-size:11px}
+ .hero-archive-margin{display:none}
+ .intro-section{padding:51px 0 24px;display:block}
+ .intro-section h2,.section-heading h2,.how-wrap h2,.capsule-promo h2,.faq h2{font-size:clamp(38px,9.7vw,57px);line-height:1.08}
+ .intro-section p{margin-top:17px;line-height:1.65}
+ .showcase{display:flex;flex-direction:column}
+ .showcase-date{padding:22px;min-height:185px}
+ .showcase-day{font-size:96px;margin-top:6px}
+ .showcase-month{font-size:32px}
+ .showcase-story{min-height:325px;padding:23px}
+ .showcase-overlay h3{font-size:clamp(35px,9.1vw,48px)}
+ .showcase-overlay p{font-size:12px;line-height:1.6}
+ .section-space{padding:56px 0}
+ .feature-grid{grid-template-columns:1fr;margin-top:27px}
+ .feature-card{min-height:0;padding:23px}
+ .feature-card-head{margin-bottom:22px}
+ .feature-card h3{font-size:clamp(26px,6.6vw,34px)}
+ .feature-card p{font-size:12px;max-width:50ch}
+ .how-section{padding:59px 0}
+ .how-wrap{display:block}
+ .how-steps{margin-top:26px}
+ .how-steps>div{grid-template-columns:26px minmax(0,1fr) 23px;gap:6px 11px;padding:20px 0}
+ .how-steps strong{font-size:15px}
+ .how-steps p{font-size:12px;line-height:1.6;max-width:none}
+ .how-steps svg{width:21px}
+ .capsule-promo{display:flex;flex-direction:column;gap:22px;padding:64px 0}
+ .book-stage{min-height:320px;width:100%}
+ .book-cover{width:220px;height:322px;padding:19px}
+ .book-sun{font-size:42px;margin:17px 0 7px}
+ .book-date{font-size:68px;margin-top:11px}
+ .book-date em{font-size:46px}
+ .book-bottom{font-size:8px;padding-bottom:8px}
+ .capsule-promo-text{margin-top:0}
+ .capsule-promo-text li{font-size:12px}
+ .faq{display:block;padding:8px 0 68px}
+ .faq>div:last-child{margin-top:26px}
+ .last-word{padding:69px 16px}
+ .last-word h2{font-size:clamp(39px,9.5vw,57px)}
+ .discover-center{min-height:calc(100svh - 72px);padding-top:28px;padding-bottom:40px}
+ .discover-center h1{font-size:clamp(42px,10vw,58px)}
+ .journey-main{min-height:calc(100svh - 72px);padding-top:17px;padding-bottom:22px}
+ .journey-grid{display:flex;flex-direction:column-reverse;gap:21px;padding:20px 0 26px}
+ .journey-copy{max-width:none}
+ .journey-copy h1{font-size:clamp(37px,9.8vw,55px);line-height:1.1;margin:14px 0 12px}
+ .journey-description{font-size:12px;line-height:1.6;margin-bottom:15px}
+ .journey-current{padding:13px}
+ .journey-checklist{margin-top:14px}
+ .journey-check-row{padding:10px 0}
+ .journey-scene{width:100%;max-width:530px;min-height:0;padding:15px}
+ .journey-scene-top{padding-bottom:11px}
+ .journey-scene-bottom{padding-top:11px}
+ .journey-ledger{min-height:238px;padding:12px 14px}
+ .journey-date-card{min-height:0;padding:8px 0 13px}
+ .journey-date-card>span:first-child{font-size:8px}
+ .journey-date-card strong{font-size:clamp(79px,18vw,108px);margin:3px 0 3px}
+ .journey-date-card em{font-size:14px}
+ .journey-date-rule{margin:10px 0 8px}
+ .journey-ledger-years{padding-top:10px;font-size:8px}
+ .journey-ledger-label{font-size:8px}
+ .journey-ledger-label span:last-child{font-size:16px}
+ .journey-footer{font-size:8px}
+ .discovery-hero{padding-top:12px}
+ .discovery-hero-grid{display:flex;flex-direction:column;align-items:stretch;gap:18px;padding:28px 0}
+ .discovery-hero-copy{padding:0}
+ .discovery-hero-copy h1{margin:16px 0}
+ .discovery-hero-copy h1 span{font-size:clamp(95px,25vw,140px);line-height:.9}
+ .discovery-hero-copy h1 em{font-size:clamp(62px,16.2vw,89px)}
+ .discovery-hero-copy>p{font-size:12px;line-height:1.62}
+ .discovery-born{padding-top:13px;margin-top:14px}
+ .discovery-hero-art{max-width:450px;margin-inline:auto;height:auto}
+ .discovery-index-card{min-height:315px;padding:22px}
+ .discovery-index-label{margin-top:17px}
+ .discovery-index-date{margin:8px 0 12px}
+ .discovery-index-date strong{font-size:clamp(85px,22vw,120px)}
+ .discovery-index-date em{font-size:clamp(39px,10vw,55px)}
+ .discovery-index-divider{padding:7px 0}
+ .discovery-index-feature{padding:12px 0 17px}
+ .discovery-index-feature strong{font-size:29px}
+ .discovery-index-feature>span{font-size:16px}
+ .discovery-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .discovery-metrics>div{padding:13px 10px;gap:8px}
+ .discovery-metrics strong{font-size:25px}
+ .discovery-metrics>a{padding:9px;min-height:53px}
+ .discovery-feature{padding:58px 0 63px}
+ .discovery-feature-grid{margin-top:21px;gap:21px}
+ .discovery-feature-copy h2{font-size:clamp(36px,9vw,53px)}
+ .discovery-feature-copy>p{font-size:12px;line-height:1.7}
+ .discovery-event-year{font-size:clamp(75px,21vw,110px)}
+ .discovery-feature-photo{min-height:clamp(285px,75vw,365px)}
+ .discovery-connection{padding:58px 0}
+ .discovery-connection-grid{gap:21px}
+ .discovery-connection-intro h2,.discovery-chronicle-head h2,.discovery-premium-intro h2,.discovery-finale h2{font-size:clamp(38px,9vw,56px)}
+ .discovery-person-card{grid-template-columns:minmax(0,1fr) minmax(80px,32%)}
+ .discovery-person-details{padding:20px 14px}
+ .discovery-person-details h3{font-size:clamp(24px,6.5vw,34px)}
+ .discovery-chronicle{padding:59px 0}
+ .discovery-chronicle-grid{margin-top:23px}
+ .discovery-chronicle-grid .moment-card{min-height:0;padding:24px}
+ .discovery-premium-section{padding:62px 0}
+ .discovery-capsule-art{min-height:315px;padding:30px}
+ .discovery-premium-intro{margin-bottom:25px}
+ .discovery-finale{padding:61px 0}
+ .capsule-cover{min-height:460px;padding:23px 17px;margin-top:15px}
+ .capsule-cover h1{font-size:clamp(56px,12.6vw,93px);line-height:1.08}
+ .cover-big-star{font-size:clamp(125px,35vw,200px)}
+ .capsule-cover p{font-size:12px;line-height:1.6}
+ .capsule-summary{padding:23px 0;gap:6px}
+ .capsule-summary strong{font-size:clamp(37px,9vw,50px)}
+ .capsule-summary span{font-size:8px;letter-spacing:.04em;text-align:center;line-height:1.5}
+ .capsule-archive{padding:56px 0}
+ .capsule-archive-head h2{font-size:clamp(39px,9.3vw,58px)}
+ .capsule-tabs{margin:25px 0 17px}
+ .capsule-tabs button{padding:13px 12px}
+ .capsule-archive .archive-entry{grid-template-columns:62px minmax(0,1fr) 30px;gap:10px;padding:22px 0}
+ .archive-entry-year strong{font-size:27px}
+ .archive-entry h3{font-size:clamp(20px,5.8vw,29px)}
+ .archive-entry p{font-size:12px;line-height:1.6}
+ .favorite-button{width:30px;height:30px}
+ .archive-conclusion{padding-bottom:52px}
+}
+@media(max-width:380px){
+ .shell,.site-header{width:min(calc(100% - 28px),1240px)}
+ .site-header{gap:7px}
+ .brand{letter-spacing:.07em}
+ .home-hero h1{font-size:39px}
+ .hero-archive-frame{padding:17px}
+ .hero-archive-meta,.hero-archive-bottom{font-size:8px}
+ .hero-archive-date strong{font-size:100px}
+ .hero-archive-date em{font-size:43px}
+ .hero-archive-entries>div{grid-template-columns:48px minmax(0,1fr);gap:8px;font-size:10px}
+ .journey-ledger{min-height:225px}
+ .journey-date-card strong{font-size:77px}
+ .journey-footer{letter-spacing:0}
+ .discovery-hero-copy h1 span{font-size:90px}
+ .discovery-hero-copy h1 em{font-size:59px}
+ .discovery-index-card{min-height:295px;padding:17px}
+ .discovery-index-date strong{font-size:83px}
+ .discovery-index-date em{font-size:38px}
+ .discovery-index-feature>span{font-size:15px}
+ .discovery-metrics strong{font-size:23px}
+ .capsule-cover{min-height:420px}
+ .capsule-cover h1{font-size:56px}
+ .capsule-archive .archive-entry{grid-template-columns:54px minmax(0,1fr) 27px;gap:8px}
+ .archive-entry-year strong{font-size:25px}
+}
+/* Motion remains meaningful: historical scanning and page reveals, no rotating circles. */
+@keyframes archive-scan-line{0%{transform:translateY(0);opacity:0}12%{opacity:.65}88%{opacity:.65}100%{transform:translateY(310px);opacity:0}}
+@keyframes archive-glide-in{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes archive-sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@media(prefers-reduced-motion:no-preference){
+ .hero-archive-frame{animation:archive-glide-in .7s .1s both}
+ .hero-archive-entries>div{animation:archive-glide-in .65s both}
+ .hero-archive-entries>div:first-child{animation-delay:.3s}
+ .hero-archive-entries>div:last-child{animation-delay:.43s}
+ .journey-ledger-scan{animation:archive-scan-line 5.5s linear infinite}
+ .discovery-index-card{animation:archive-glide-in .7s .15s both}
+ .discovery-loading-line span{animation:archive-sweep 1.7s linear infinite}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero-archive-frame,.hero-archive-entries>div,.journey-ledger-scan,
+ .discovery-index-card,.discovery-loading-line span{animation:none!important}
+ .discovery-loading-line span{transform:none!important;opacity:.8}
+}
+@media print{
+ .hero-archive-frame,.discovery-index-card{animation:none!important;box-shadow:none}
+}

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowUpRight, CalendarDays, Globe2, History, Sparkles, Clock3, BookOpen, HeartHandshake, ChevronDown, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, CalendarDays, Globe2, History, Sparkles, Clock3, BookOpen, ChevronDown, ShieldCheck } from 'lucide-react';
 import { SiteHeader, SiteFooter } from '@/components/v2/Brand';
 import { BirthdayForm } from '@/components/v2/BirthdayForm';
 import { LandingMotion } from '@/components/v2/LandingMotion';
@@ -23,10 +23,19 @@ export default function HomePage() {
      <BirthdayForm/>
      <div className="hero-trust"><span><ShieldCheck size={15}/> No account</span><span><Clock3 size={15}/> Just your birthday</span><span><Globe2 size={15}/> Wikipedia-powered</span></div>
     </div>
-    <div className="hero-portal" aria-label="An artistic portal to historical timelines">
-      <span className="portal-cross">✳</span><span className="portal-ring ring-one"/><span className="portal-ring ring-two"/><span className="portal-ring ring-three"/>
-      <div className="portal-centered"><span className="eyebrow">THE HUMAN ARCHIVE</span><strong>20</strong><em>JULY</em><span className="portal-line"/><small>ONE DATE · MANY CENTURIES</small></div>
-      <span className="portal-year year-left">1969</span><span className="portal-year year-right">2026</span><span className="portal-dot portal-dot-a"/><span className="portal-dot portal-dot-b"/>
+    <div className="hero-archive" aria-label="Illustrative historical archive for July 20">
+      <div className="hero-archive-frame">
+        <div className="hero-archive-meta"><span>THE HUMAN ARCHIVE</span><span>VOL. 001</span></div>
+        <div className="hero-archive-issue">A SINGLE DATE, CENTURIES OF HISTORY</div>
+        <div className="hero-archive-date"><strong>20</strong><em>July</em></div>
+        <div className="hero-archive-rule"><span>ON THIS DAY</span><span>↓</span></div>
+        <div className="hero-archive-entries">
+          <div><time dateTime="1969-07-20">1969</time><span>Apollo 11 lands on the Moon</span></div>
+          <div><time dateTime="1976-07-20">1976</time><span>Viking 1 lands on Mars</span></div>
+        </div>
+        <div className="hero-archive-bottom"><span>EXAMPLE DATE · 20 JULY</span><span>✳</span></div>
+      </div>
+      <span className="hero-archive-margin" aria-hidden="true">YOUR STORY IS IN THE ARCHIVE</span>
     </div>
    </section>
    <div className="ticker" aria-hidden="true"><div>ONE DATE <b>✳</b> COUNTLESS STORIES <b>✳</b> A PERSONAL JOURNEY THROUGH HISTORY <b>✳</b> ONE DATE <b>✳</b> COUNTLESS STORIES <b>✳</b></div></div>

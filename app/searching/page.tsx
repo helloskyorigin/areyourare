@@ -117,23 +117,21 @@ function SearchingExperience() {
               <Link href="/discover" className="journey-back"><ArrowLeft size={15}/> Change birthday</Link>
             )}
           </section>
-          <section className="journey-scene" aria-label={birthday ? 'Opening the historical archive for ' + dateText : 'Historical archive artwork'}>
-            <div className="journey-scene-top"><span>THE DATE PORTAL</span><span>ARCHIVE Nº 01</span></div>
-            <div className="journey-orbit-field" aria-hidden="true">
-              <span className="journey-orbit orbit-outer" />
-              <span className="journey-orbit orbit-middle" />
-              <span className="journey-orbit orbit-inner" />
-              <span className="journey-orbit-arc" />
-              <span className="journey-spark spark-one">✳</span>
-              <span className="journey-spark spark-two">✦</span>
-              <span className="journey-spark spark-three">✧</span>
-            </div>
-            <div className="journey-date-card">
-              <span>YOUR CALENDAR DAY</span>
-              <strong>{day}</strong>
-              <em>{month.toUpperCase()}</em>
-              <span className="journey-date-rule" />
-              <small>{birthday ? 'BORN ' + birthday.year : 'THE HUMAN ARCHIVE'}</small>
+          <section className="journey-scene" aria-label={birthday ? 'The archive card for ' + dateText : 'Historical archive card'}>
+            <div className="journey-scene-top"><span>THE HUMAN ARCHIVE</span><span>ISSUE Nº 001</span></div>
+            <div className="journey-ledger">
+              <div className="journey-ledger-label"><span>PERSONAL DATE RECORD</span><span>✳</span></div>
+              <div className="journey-date-card">
+                <span>YOUR CALENDAR DAY</span>
+                <strong>{day}</strong>
+                <em>{month.toUpperCase()}</em>
+                <span className="journey-date-rule" />
+                <small>{birthday ? 'BORN ' + birthday.year : 'THE HUMAN ARCHIVE'}</small>
+              </div>
+              <div className="journey-ledger-years" aria-hidden="true">
+                <span>1600</span><span>1800</span><span>1900</span><span>2000</span>
+              </div>
+              <span className="journey-ledger-scan" aria-hidden="true" />
             </div>
             <div className="journey-scene-bottom">
               <span className="journey-trail" aria-hidden="true"><i/><i/><i/><i/><i/></span>
