@@ -6,7 +6,7 @@ export async function GET(){
     status:'ok',
     product:'AREYOURARE',
     experience:'birthday-history-v2',
-    source:'Wikipedia On This Day',
+    source:'historical archive',
     checkoutAvailable:checkoutReady(),
     mode:process.env.DODO_MODE==='live_mode'?'live':'test',
     timestamp:new Date().toISOString(),

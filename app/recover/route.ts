@@ -9,7 +9,7 @@ export async function GET(request:NextRequest) {
   if (!receipt) return NextResponse.redirect(failure,{headers});
   const payment=await statusForReceipt(receipt,receipt.date);
   if (!payment.paid) return NextResponse.redirect(failure,{headers});
-  const destination=new URL('/capsule',request.nextUrl.origin);
+  const destination=new URL('/result',request.nextUrl.origin);
   destination.searchParams.set('date',receipt.date);
   const response=NextResponse.redirect(destination,{headers});
   response.cookies.set(cookieNameForDate(receipt.date),encodeReceipt(receipt),{

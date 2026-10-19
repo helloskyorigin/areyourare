@@ -1,3 +1,3 @@
 import type { Metadata } from 'next';
-export const metadata:Metadata={title:'Your day in history — AREYOURARE',robots:{index:false,follow:false}};
+export const metadata: Metadata = {title:'Your complete birthday history — AREYOURARE',robots:{index:false,follow:false},referrer:'no-referrer'};
 export default function Layout({children}:{children:React.ReactNode}){return children;}

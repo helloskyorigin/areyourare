@@ -29,7 +29,7 @@ export default function MyCapsules(){
    const birth=parseBirthday(date);
    if(!birth)return null;
    const label=new Date(Date.UTC(2000,birth.month-1,birth.day)).toLocaleDateString(lang==='hi'?'hi-IN':'en-US',{month:'long',day:'numeric',timeZone:'UTC'});
-   return <Link className="owned-capsule" key={date} href={'/capsule?date='+encodeURIComponent(date)}>
+   return <Link className="owned-capsule" key={date} href={'/result?date='+encodeURIComponent(date)}>
     <span>AREYOURARE / VOL. 01</span><CalendarDays size={24}/>
     <strong>{label}</strong><small>{tr('BIRTH YEAR','जन्म-वर्ष')} {birth.year}</small>
     <span className="owned-open">{tr('OPEN MY REPORT','मेरी रिपोर्ट खोलें')} <ArrowUpRight size={16}/></span>

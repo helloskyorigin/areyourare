@@ -3,41 +3,46 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 const file=name=>readFileSync(name,'utf8');
 
-test('header offers persistent English and Hindi switch across pages',()=>{
+test('English and Hindi switch persists across product screens',()=>{
  const ctx=file('components/v2/Language.tsx');
  assert.match(ctx,/ayr:language/);
  assert.match(ctx,/document\.documentElement\.lang/);
  assert.match(ctx,/हिंदी/);
- const layout=file('app/layout.tsx');
- assert.match(layout,/LanguageProvider/);
+ assert.match(file('app/layout.tsx'),/LanguageProvider/);
 });
-test('free result includes exactly one historical event, no paid collections',()=>{
+test('public API reveals availability only; report API verifies purchase',()=>{
+ const api=file('app/api/discover/route.ts');
+ assert.match(api,/ready:true/);
+ assert.doesNotMatch(api,/freeHistory|localizeFree|featured|source:/);
+ const full=file('app/api/capsule/route.ts');
+ assert.match(full,/verifiedPurchase/);
+ assert.match(full,/localizePremium/);
  const history=file('lib/history.ts');
- assert.match(history,/export function freeHistory/);
- const snippet=history.slice(history.indexOf('export function freeHistory'));
- assert.doesNotMatch(snippet,/preview:h\.preview|person:h\.person|totals:h\.totals|exactDayYear:h\.exactDayYear/);
- const result=file('app/result/page.tsx');
- assert.doesNotMatch(result,/MomentCard|history\.preview|history\.person/);
- assert.match(result,/result2-mobile-teaser/);
- assert.match(result,/<PremiumCTA date=\{date\} paid=\{paid\}/);
+ assert.doesNotMatch(history,/export function freeHistory/);
 });
-test('mobile conversion call-to-action appears before full free story',()=>{
- const css=file('app/conversion.css');
- assert.match(css,/\.result2-upgrade\{order:-1\}/);
- assert.match(css,/\.result2-event\{order:1\}/);
- assert.match(css,/\.language-toggle/);
+test('paid report is a distinct route, reachable only with API entitlement',()=>{
+ const full=file('app/result/page.tsx');
+ assert.match(full,/from '\.\.\/capsule\/page'/);
+ const unlock=file('app/unlock/page.tsx');
+ assert.match(unlock,/<PremiumCTA date=\{date\} paid=\{paid\}/);
+ assert.doesNotMatch(unlock,/featured\.title|history\.timeline|MomentCard/);
+ const scan=file('app/searching/page.tsx');
+ assert.match(scan,/\/unlock\?date=/);
+ assert.match(scan,/body\.ready !== true/);
 });
-test('Hindi historical content is translated server-side only',()=>{
+test('language translation remains behind the verified report API',()=>{
  const translator=file('lib/i18n-history.ts');
  assert.match(translator,/GOOGLE_CLOUD_TRANSLATE_API_KEY/);
  assert.match(translator,/translation\.googleapis\.com/);
- assert.match(file('app/api/discover/route.ts'),/localizeFree/);
- assert.match(file('app/api/capsule/route.ts'),/localizePremium/);
- assert.match(file('app/api/capsule/route.ts'),/verifiedPurchase/);
+ assert.doesNotMatch(translator,/localizeFree/);
+ const api=file('app/api/capsule/route.ts');
+ assert.match(api,/verifiedPurchase/);
+ assert.match(api,/localizePremium/);
 });
-test('no public Wikipedia-powered marketing label',()=>{
- for(const page of ['app/page.tsx','app/searching/page.tsx','app/result/page.tsx',
+test('no "Wikipedia-powered" label or sample historical result in public marketing',()=>{
+ for(const path of ['app/page.tsx','app/searching/page.tsx','app/unlock/page.tsx',
  'components/v2/Brand.tsx','components/v2/PremiumCTA.tsx']){
-  assert.doesNotMatch(file(page),/wikipedia[\s-]*powered|wikipedia[\s-]*sourced/i);
+  const s=file(path);
+  assert.doesNotMatch(s,/wikipedia[\s-]*powered|wikipedia[\s-]*sourced|Apollo 11|free story|पहली कहानी मुफ़्त/i);
  }
 });

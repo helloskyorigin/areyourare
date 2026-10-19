@@ -35,13 +35,13 @@ export function PremiumCTA({date,paid}:{date:string;paid:boolean}){
  return <div className="premium premium2">
   <div className="premium2-tag">✳ {tr('UNLOCK YOUR COMPLETE HISTORY','पूरा इतिहास खोलें')}</div>
   <div className="premium2-price"><strong>$2</strong><span>{tr('one-time payment','सिर्फ़ एक बार भुगतान')}</span></div>
-  <h2>{tr('One story is free.','एक कहानी मुफ़्त।')}<br/><em>{tr('The rest is yours.','बाकी सब आपका।')}</em></h2>
+  <h2>{tr('Your day is waiting.','आपकी कहानी आपका इंतज़ार कर रही है।')}<br/><em>{tr('Unlock it all.','पूरी कहानी खोलें।')}</em></h2>
   <div className="premium2-benefits">
-   <span><Check size={16}/>{tr('Full historical timeline','पूरी ऐतिहासिक समयरेखा')}</span>
+   <span><Check size={16}/>{tr('Historical moments & timeline','ऐतिहासिक घटनाएँ और समयरेखा')}</span>
    <span><Check size={16}/>{tr('Famous birthdays','इसी दिन जन्मे प्रसिद्ध लोग')}</span>
    <span><Check size={16}/>{tr('Complete downloadable report','पूरी रिपोर्ट डाउनलोड करें')}</span>
   </div>
-  {paid?<Link className="button-primary premium2-button" href={'/capsule?date='+encodeURIComponent(date)}>
+  {paid?<Link className="button-primary premium2-button" href={'/result?date='+encodeURIComponent(date)}>
     {tr('Open my report','मेरी रिपोर्ट खोलें')} <ArrowUpRight size={18}/>
   </Link>:
    <button type="button" onClick={checkout} className="button-primary premium2-button" disabled={loading||available!=='ready'}>

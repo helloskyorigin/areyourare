@@ -15,7 +15,7 @@ test('published checkout never trusts a query flag as payment authorization',()=
 test('checkout sends users to a dedicated verification route',()=>{
  assert.match(source('lib/payments.ts'),/payment\/return\?date=/);
  assert.match(source('app/payment/return/page.tsx'),/payment-status\?date=/);
- assert.match(source('app/payment/return/page.tsx'),/router\.replace\('\/capsule/);
+ assert.match(source('app/payment/return/page.tsx'),/router\.replace\('\/result/);
 });
 test('cross-device recovery verifies Dodo again rather than trusting URL tokens',()=>{
  const recovery=source('app/recover/route.ts');
@@ -35,8 +35,9 @@ test('whole PDF is available in print mode even when archive pagination is activ
  assert.match(page,/data\.exactMatches\.map/);
  assert.match(css,/@media print/);
 });
-test('private pages are noindexed and the paid checkout button is gated',()=>{
+test('private pages, including mystery preview, are noindexed and checkout is gated',()=>{
  assert.match(source('app/robots.ts'),/my-capsules/);
+ assert.match(source('app/robots.ts'),/unlock/);
  assert.match(source('app/capsule/layout.tsx'),/index:false/);
  assert.match(source('app/payment/return/layout.tsx'),/index:false/);
  assert.match(source('components/v2/PremiumCTA.tsx'),/checkout-availability/);

@@ -6,7 +6,7 @@ export default function robots():MetadataRoute.Robots {
       allow:['/','/discover'],
       disallow:[
         '/api/','/result','/searching','/capsule',
-        '/my-capsules','/payment/','/recover',
+        '/my-capsules','/payment/','/recover','/unlock',
       ],
     }],
     sitemap:'https://areyourare.ai.studio/sitemap.xml',

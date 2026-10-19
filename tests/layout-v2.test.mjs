@@ -1,47 +1,34 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-
-const source = (name) => readFileSync(resolve(process.cwd(), name), 'utf8');
-const landing = source('app/page.tsx');
-const searching = source('app/searching/page.tsx');
-const result = source('app/result/page.tsx');
-const stability = source('app/layout-stability.css');
-const root = source('app/layout.tsx');
-
-test('Orbital illustrations are removed from the active V2 journey', () => {
-  for (const text of [landing, searching, result]) {
-    assert.doesNotMatch(text, /portal-ring|journey-orbit|discovery-art-ring|discovery-loading-ring/);
-  }
-  assert.match(landing, /hero-archive-frame/);
-  assert.match(searching, /scan2-sheet/);
-  assert.match(result, /result2-grid/);
+const source = name => readFileSync(name,'utf8');
+test('orbital visuals remain removed from active pages',()=>{
+ for(const path of ['app/page.tsx','app/searching/page.tsx','app/unlock/page.tsx','app/result/page.tsx']) {
+  assert.doesNotMatch(source(path),/portal-ring|journey-orbit|discovery-art-ring|discovery-loading-ring/);
+ }
+ assert.match(source('app/page.tsx'),/hero-archive-frame/);
+ assert.match(source('app/searching/page.tsx'),/scan2-sheet/);
+ assert.match(source('app/unlock/page.tsx'),/mystery-stage/);
 });
-
-test('Mobile content uses an explicit grid rather than squeezed auto-columns', () => {
-  assert.match(stability, /\.how-steps>div>p\{grid-column:2;grid-row:2/);
-  assert.match(stability, /\.how-steps>div>strong\{grid-column:2;grid-row:1/);
-  assert.match(stability, /@media\(max-width:760px\)/);
-  assert.match(stability, /@media\(max-width:380px\)/);
-  assert.match(stability, /grid-template-columns:minmax\(0,1fr\)/);
+test('responsive mystery screen and past broken how-steps fixed',()=>{
+ const stability=source('app/layout-stability.css');
+ const mystery=source('app/mystery.css');
+ assert.match(stability,/\.how-steps>div>p\{grid-column:2;grid-row:2/);
+ assert.match(mystery,/\.mystery-lock-grid/);
+ assert.match(mystery,/@media\(max-width:760px\)/);
+ assert.match(mystery,/@media\(max-width:380px\)/);
+ assert.match(mystery,/@media\(prefers-reduced-motion:reduce\)/);
+ assert.match(source('app/layout.tsx'),/import '\.\/mystery\.css';/);
 });
-
-test('Global style imports the responsive and conversion layers', () => {
-  assert.match(root, /import '\.\/layout-stability\.css';/);
-  assert.match(root, /import '\.\/conversion\.css';/);
-  assert.match(stability, /prefers-reduced-motion:reduce/);
+test('all author CSS has balanced brace pairs',()=>{
+ for(const path of ['app/globals.css','app/journey.css','app/layout-stability.css','app/conversion.css','app/launch.css','app/mystery.css']){
+  const css=source(path);
+  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,path);
+ }
 });
-
-test('Stylesheet brace pairs stay balanced', () => {
-  for (const file of ['app/globals.css', 'app/journey.css', 'app/layout-stability.css', 'app/conversion.css']) {
-    const css = source(file);
-    assert.equal((css.match(/\{/g) || []).length, (css.match(/\}/g) || []).length, file);
-  }
-});
-
-test('Checkout, data sources, and premium gate remain wired', () => {
-  assert.match(result, /<PremiumCTA date=\{date\} paid=\{paid\}/);
-  assert.match(searching, /\/api\/discover\?date=/);
-  assert.match(result, /\/api\/payment-status\?date=/);
+test('checkout sits below the curiosity cards and payment success goes to paid result',()=>{
+ const unlock=source('app/unlock/page.tsx');
+ assert.ok(unlock.indexOf('mystery-lock-grid')<unlock.indexOf('mystery-payment'));
+ assert.match(source('app/payment/return/page.tsx'),/router\.replace\('\/result\?date=/);
+ assert.match(source('app/recover/route.ts'),/new URL\('\/result'/);
 });

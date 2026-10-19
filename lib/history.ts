@@ -4,12 +4,10 @@ export type HistoricalMoment = {
   id: string; year: number; kind: 'event'|'birth'|'death'; title: string;
   text: string; source: string | null; image: string | null;
 };
-export type FreeHistory = {
+export type FullHistory = {
   birthDate: string; dayLabel: string; birthYear: number;
   featured: HistoricalMoment;
   attribution: string;
-};
-export type FullHistory = FreeHistory & {
   person: HistoricalMoment | null;
   preview: HistoricalMoment[]; exactDayYear: HistoricalMoment | null;
   totals: { events: number; people: number; exact: number };
@@ -83,13 +81,5 @@ export async function loadHistory(date: Birthday): Promise<FullHistory> {
     attribution: 'Historical entries from Wikipedia / Wikimedia projects. Follow original links for context and licensing.',
     timeline: [...all].sort((a,b) => a.year - b.year),
     people: people.slice(0,60), deaths: deaths.slice(0,30), exactMatches,
-  };
-}
-export function freeHistory(h: FullHistory): FreeHistory {
-  // Free mode intentionally returns ONE true historical moment.
-  // All other people, events, previews and paid metrics stay server-side.
-  return {
-    birthDate:h.birthDate,dayLabel:h.dayLabel,birthYear:h.birthYear,
-    featured:h.featured,attribution:h.attribution,
   };
 }

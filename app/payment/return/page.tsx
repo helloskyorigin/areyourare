@@ -35,7 +35,7 @@ function PaymentReturn() {
         const current= data.paid===true ? 'paid' : data.state||'unavailable';
         setState(current);
         if (current==='paid'){
-          router.replace('/capsule?date='+encodeURIComponent(date));
+          router.replace('/result?date='+encodeURIComponent(date));
           return;
         }
         if ((current==='pending'||current==='unavailable') && checks<13){
@@ -79,7 +79,7 @@ function PaymentReturn() {
           : state==='unavailable' ? tr("We could not confirm the payment right now. You will not be charged again by using Retry verification.","भुगतान की पुष्टि अभी नहीं हो पा रही है। पुष्टि दोबारा जाँचने से नया भुगतान नहीं होगा।")
           : state==='refunded' ? tr("This purchase is no longer active. Contact support if you believe this is incorrect.","यह खरीद अब सक्रिय नहीं है। गलती लगती है तो सहायता से संपर्क करें।")
           : state==='misconfigured' ? tr("The payment system is not currently configured for purchases. No premium content was unlocked.","भुगतान सुविधा अभी उपलब्ध नहीं है। प्रीमियम रिपोर्ट नहीं खोली गई है।")
-          : state==='failed'||state==='cancelled' ? tr("Your report remains safe on the free results page. You can choose whether to start a new checkout.","आपकी मुफ़्त कहानी सुरक्षित है। चाहें तो दोबारा भुगतान शुरू कर सकते हैं।")
+          : state==='failed'||state==='cancelled' ? tr("Your date preview is still available. You can retry checkout whenever you're ready.","आपकी तारीख की झलक उपलब्ध है। चाहें तो फिर भुगतान कर सकते हैं।")
           : tr("No matching checkout was found in this browser. Open the link in the same browser used for payment, or contact support with your receipt.","इस ब्राउज़र में भुगतान का रिकॉर्ड नहीं मिला। भुगतान वाले ब्राउज़र में खोलें या रसीद के साथ सहायता लें।")}</p>
         {birth&&<div className="return-record"><span>{tr("TIME CAPSULE","टाइम कैप्सूल")}</span><strong>{new Date(Date.UTC(2000,birth.month-1,birth.day)).toLocaleDateString(lang==='hi'?'hi-IN':'en-US',{month:'long',day:'numeric',timeZone:'UTC'})} · {birth.year}</strong></div>}
         {checking&&!isPaid&&!error&&<p className="return-wait"><Clock3 size={15}/> {tr('Secure confirmation in progress…','सुरक्षित पुष्टि जारी है…')}</p>}
@@ -87,10 +87,10 @@ function PaymentReturn() {
           {!isPaid && (timedOut||error) && birth && <button type="button" className="button-primary" onClick={()=>setAttempt(n=>n+1)}>
             <RefreshCw size={16}/> {tr('Retry verification','फिर से पुष्टि जाँचें')}
           </button>}
-          {isPaid&&birth&&<Link className="button-primary" href={'/capsule?date='+encodeURIComponent(date)}>
+          {isPaid&&birth&&<Link className="button-primary" href={'/result?date='+encodeURIComponent(date)}>
             {tr('Open my Time Capsule','मेरी टाइम कैप्सूल खोलें')} <ArrowRight size={17}/>
           </Link>}
-          {birth&&<Link className="button-secondary" href={'/result?date='+encodeURIComponent(date)}>
+          {birth&&<Link className="button-secondary" href={'/unlock?date='+encodeURIComponent(date)}>
             <ArrowLeft size={15}/> {tr('Back to my discovery','मेरी खोज पर वापस जाएँ')}
           </Link>}
           {!birth&&<Link className="button-secondary" href="/discover">{tr("Enter birthday","जन्मतिथि दर्ज करें")} <ArrowRight size={15}/></Link>}

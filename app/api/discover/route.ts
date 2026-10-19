@@ -1,23 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseBirthday } from '@/lib/birthday';
-import { loadHistory, freeHistory } from '@/lib/history';
-import { apiLanguage, hindiTranslationReady, localizeFree } from '@/lib/i18n-history';
-export const runtime='nodejs';
-export async function GET(request:NextRequest){
- const date=parseBirthday(request.nextUrl.searchParams.get('date'));
- const lang=apiLanguage(request.nextUrl.searchParams.get('lang'));
- if(!date)return NextResponse.json({error:lang==='hi'?'कृपया सही जन्मतिथि चुनें।':'Please choose a valid birthday.'},{status:400});
- if(lang==='hi'&&!hindiTranslationReady())return NextResponse.json({
-  error:'हिंदी में ऐतिहासिक जानकारी अभी उपलब्ध नहीं है। कृपया कुछ देर बाद कोशिश करें।',
-  code:'HINDI_TRANSLATION_NOT_CONFIGURED',
- },{status:503});
- try{
-  const full=await loadHistory(date);
-  const free=freeHistory(full);
-  return NextResponse.json(await localizeFree(free,lang),{
-   headers:{'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'},
-  });
- }catch{
-  return NextResponse.json({error:lang==='hi'?'ऐतिहासिक जानकारी अभी नहीं मिल पा रही है। फिर कोशिश करें।':'The historical archive is temporarily unavailable. Please retry.'},{status:503});
- }
+import { loadHistory } from '@/lib/history';
+
+export const runtime = 'nodejs';
+
+/** Pre-purchase endpoint returns only successful eligibility.
+ * Never include event names, years, people, counts, excerpts or source links.
+ * All storytelling content is available exclusively at /api/capsule after verified payment.
+ */
+export async function GET(request: NextRequest) {
+  const date = parseBirthday(request.nextUrl.searchParams.get('date'));
+  const hi = request.nextUrl.searchParams.get('lang') === 'hi';
+  if (!date) {
+    return NextResponse.json({error: hi ? 'सही जन्मतिथि चुनें।' : 'Choose a valid date of birth.'},
+      {status:400,headers:{'Cache-Control':'private, no-store'}});
+  }
+  try {
+    await loadHistory(date);
+    return NextResponse.json({ready:true},{
+      headers:{'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'},
+    });
+  } catch {
+    return NextResponse.json({ready:false,error:hi?
+      'इस तारीख का इतिहास अभी नहीं खुल पा रहा। कृपया फिर कोशिश करें।':
+      'This date could not be checked right now. Please try again.'},{
+      status:503,headers:{'Cache-Control':'private, no-store'},
+    });
+  }
 }

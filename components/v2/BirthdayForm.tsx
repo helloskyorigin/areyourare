@@ -24,6 +24,6 @@ export function BirthdayForm({compact=false}:{compact?:boolean}){
    <button type="submit" className="button-primary">{tr('Discover my day','मेरा दिन जानें')} <ArrowUpRight size={19}/></button>
   </div>
   {error?<p role="alert" className="form-error">{tr('Choose a valid birth date between 1900 and today.','1900 से आज तक की सही जन्मतिथि चुनें।')}</p>:
-   <p className="form-caption">{tr('✦ First story free · No account needed','✦ पहली कहानी मुफ़्त · कोई अकाउंट नहीं चाहिए')}</p>}
+   <p className="form-caption">{tr('✦ Preview your date · One-time $2 report','✦ अपनी तारीख देखें · पूरी रिपोर्ट सिर्फ़ $2 में')}</p>}
  </form>;
 }

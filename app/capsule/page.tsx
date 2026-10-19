@@ -56,7 +56,7 @@ function Capsule(){
   <h1>{tr('Your report is still locked.','आपकी रिपोर्ट अभी लॉक है।')}</h1>
   <p>{error||tr('Please return to your result.','कृपया रिज़ल्ट पर वापस जाएँ।')}</p>
   <p>{tr('Open this page in the browser used for checkout, or use a saved private recovery link.','भुगतान वाले ब्राउज़र में यह पेज खोलें, या अपना निजी रिकवरी लिंक इस्तेमाल करें।')}</p>
-  <Link className="button-primary" href={'/result?date='+encodeURIComponent(date)}>{tr('Back to results','रिज़ल्ट पर जाएँ')} <ArrowLeft size={17}/></Link>
+  <Link className="button-primary" href={'/unlock?date='+encodeURIComponent(date)}>{tr('Back to results','रिज़ल्ट पर जाएँ')} <ArrowLeft size={17}/></Link>
  </main><SiteFooter/></div>;
 
  return <div className="site capsule-page"><SiteHeader/><main>

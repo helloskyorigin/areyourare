@@ -1,5 +1,5 @@
 import { unstable_cache } from 'next/cache';
-import type { FreeHistory, FullHistory, HistoricalMoment } from '@/lib/history';
+import type { FullHistory, HistoricalMoment } from '@/lib/history';
 
 export type AppLanguage = 'en' | 'hi';
 export function apiLanguage(input:string|null):AppLanguage { return input==='hi'?'hi':'en'; }
@@ -56,11 +56,6 @@ async function translateMoments(moments:HistoricalMoment[]):Promise<HistoricalMo
     title:translated[i*2]||moment.title,
     text:translated[i*2+1]||moment.text,
   }));
-}
-export async function localizeFree(history:FreeHistory,lang:AppLanguage):Promise<FreeHistory> {
-  if(lang==='en')return history;
-  const [featured]=await translateMoments([history.featured]);
-  return {...history,featured,attribution:'ऐतिहासिक जानकारी सार्वजनिक स्रोतों से ली गई है। मूल लेख और लाइसेंस देखने के लिए स्रोत लिंक खोलें।'};
 }
 async function translatePremium(history:FullHistory):Promise<FullHistory> {
   // Translate the same canonical records throughout all tabs, by id, retaining
