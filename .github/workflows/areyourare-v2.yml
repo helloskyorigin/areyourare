@@ -1,0 +1,33 @@
+name: AREYOURARE V2 — Build & Payment Security
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  launch-checks:
+    name: Production build + V2 safety tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      APP_URL: https://areyourare.ai.studio
+      DODO_MODE: test_mode
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install frozen project dependencies
+        run: bun install --frozen-lockfile
+      - name: TypeScript strict check
+        run: bun x tsc --noEmit
+      - name: Birthday history + payment + responsive regression tests
+        run: node --import tsx --test tests/birthday-v2.test.ts tests/payments-v2.test.ts tests/layout-v2.test.mjs tests/launch-v2.test.mjs
+      - name: Next.js production build
+        run: bun run build
