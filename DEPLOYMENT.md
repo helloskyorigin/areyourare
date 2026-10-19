@@ -20,7 +20,7 @@
 - Default English, optional Hindi via header toggle, preserved across navigation.
 - UI copy is bilingual throughout current customer-facing screens, checkout return, accountless reports and legal pages.
 - Historical titles and descriptions are automatically translated on the server for **paid Hindi reports** when \`GOOGLE_CLOUD_TRANSLATE_API_KEY\` is configured. This is a separate billed Google Cloud Translation Basic API account. It must be enabled and quota-limited on the server. **Do not** expose the key via \`NEXT_PUBLIC_\`.
-- If the key is absent, Hindi paid historical content returns a clear error instead of presenting untranslated results as Hindi. Ensure Hindi works before advertising Hindi availability.
+- If the key is absent or the translation provider fails, verified paid access continues: Hindi UI labels remain while the original historical text is shown with an explicit Hindi notice. Ensure Hindi translation works before advertising fully translated reports.
 - The Dodo-hosted checkout page's language is controlled by Dodo, not this app.
 
 ## Server environment

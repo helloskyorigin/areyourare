@@ -8,6 +8,7 @@ export type FullHistory = {
   birthDate: string; dayLabel: string; birthYear: number;
   featured: HistoricalMoment;
   attribution: string;
+  translationWarning?: string;
   person: HistoricalMoment | null;
   preview: HistoricalMoment[]; exactDayYear: HistoricalMoment | null;
   totals: { events: number; people: number; exact: number };
@@ -78,7 +79,7 @@ export async function loadHistory(date: Birthday): Promise<FullHistory> {
     featured: ranked[0], person: people[0] || null,
     preview: ranked.slice(1,3), exactDayYear: exactMatches[0] || null,
     totals: { events: all.length, people: people.length, exact: exactMatches.length },
-    attribution: 'Historical entries from Wikipedia / Wikimedia projects. Follow original links for context and licensing.',
+    attribution: 'Historical records are source-linked. Follow the original references for author credits and licensing.',
     timeline: [...all].sort((a,b) => a.year - b.year),
     people: people.slice(0,60), deaths: deaths.slice(0,30), exactMatches,
   };

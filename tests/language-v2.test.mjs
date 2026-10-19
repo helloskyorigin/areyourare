@@ -46,3 +46,11 @@ test('no "Wikipedia-powered" label or sample historical result in public marketi
   assert.doesNotMatch(s,/wikipedia[\s-]*powered|wikipedia[\s-]*sourced|Apollo 11|free story|पहली कहानी मुफ़्त/i);
  }
 });
+
+test('Hindi provider outage never blocks a verified paid report',()=>{
+ const api=file('app/api/capsule/route.ts');
+ assert.match(api,/translationWarning/);
+ assert.match(api,/hindiTranslationReady/);
+ assert.match(api,/verifiedPurchase/);
+ assert.match(file('app/capsule/page.tsx'),/data\.translationWarning/);
+});

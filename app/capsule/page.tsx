@@ -56,7 +56,7 @@ function Capsule(){
   <h1>{tr('Your report is still locked.','आपकी रिपोर्ट अभी लॉक है।')}</h1>
   <p>{error||tr('Please return to your result.','कृपया रिज़ल्ट पर वापस जाएँ।')}</p>
   <p>{tr('Open this page in the browser used for checkout, or use a saved private recovery link.','भुगतान वाले ब्राउज़र में यह पेज खोलें, या अपना निजी रिकवरी लिंक इस्तेमाल करें।')}</p>
-  <Link className="button-primary" href={'/unlock?date='+encodeURIComponent(date)}>{tr('Back to results','रिज़ल्ट पर जाएँ')} <ArrowLeft size={17}/></Link>
+  <Link className="button-primary" href={'/unlock?date='+encodeURIComponent(date)}>{tr('Back to date preview','अपनी तारीख की झलक पर जाएँ')} <ArrowLeft size={17}/></Link>
  </main><SiteFooter/></div>;
 
  return <div className="site capsule-page"><SiteHeader/><main>
@@ -69,6 +69,7 @@ function Capsule(){
    </div>
    <div className="capsule-cover-bottom"><span>{tr('THE FULL STORY','पूरी कहानी')}</span><span>↓ {tr('EXPLORE BELOW','नीचे देखें')}</span></div>
   </section>
+  {data.translationWarning&&<div className="shell report-translation-warning" role="status">{data.translationWarning}</div>}
   <section className="capsule-summary shell">
    <div><strong>{data.timeline.length}</strong><span>{tr('HISTORICAL EVENTS','ऐतिहासिक घटनाएँ')}</span></div>
    <div><strong>{data.people.length}</strong><span>{tr('NOTABLE BIRTHDAYS','प्रसिद्ध जन्मदिन')}</span></div>

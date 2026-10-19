@@ -127,3 +127,5 @@
 @media(prefers-reduced-motion:reduce) {
  .mystery-stage,.mystery-book,.mystery-lock-grid article{animation:none!important;transition:none!important}
 }
+
+.report-translation-warning{border:1px solid rgba(224,186,125,.45);background:rgba(224,186,125,.075);padding:14px 18px;color:var(--paper);font-size:12px;line-height:1.7;margin-top:18px;margin-bottom:18px}
