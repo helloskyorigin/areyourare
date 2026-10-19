@@ -48,7 +48,7 @@ function Searching(){
      <div className="scan2-sheet">
        <div className="scan2-content">
          <span className="eyebrow">✳ {tr('LOOKING THROUGH HISTORY','इतिहास में खोज जारी है')}</span>
-         <h1>{state==='loading'?tr('Finding your','आपकी खास')}<br/>:tr('Couldn’t open','आपकी खोज')}<br/>}
+         <h1>{state==='loading'?tr('Finding your','आपकी खास'):tr('Couldn’t open','आपकी खोज')}<br/>
            <em>{state==='loading'?tr('moment.','घटना...'):tr('your moment.','पूरी नहीं हुई।')}</em>
          </h1>
          <p>{state==='loading'?tr('Finding one real historical event linked to your birthday.','आपके जन्मदिन से जुड़ी एक असली ऐतिहासिक घटना खोज रहे हैं।'):error}</p>
