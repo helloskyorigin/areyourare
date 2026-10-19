@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { X, HelpCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { AdSlot } from '@/components/ads/AdSlot';
 
 interface FaqModalProps {
   isOpen: boolean;
@@ -95,9 +94,6 @@ export function FaqModal({ isOpen, onClose }: FaqModalProps) {
             </div>
           ))}
         </div>
-
-        {/* Lower FAQ Ad Slot (collapses cleanly when unconfigured) */}
-        <AdSlot placement="faq_lower_content" className="my-4 px-0" />
 
         {/* Footer CTA */}
         <div className="pt-6 mt-6 border-t border-white/[0.08] flex items-center justify-between">

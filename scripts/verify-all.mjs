@@ -9,7 +9,6 @@ import { checkRateLimit, resetRateLimitStore } from '../lib/security/rate-limit.
 import { checkAbuseLimits } from '../lib/security/abuse.ts';
 import { runRarityEngineTests } from '../lib/rarity/__tests__/rarity-engine.test.ts';
 import { runBestDiscoveryTests } from '../lib/rarity/__tests__/best-discovery.test.ts';
-import { runAdSenseMonetizationTests } from '../lib/ads/__tests__/adsense.test.ts';
 
 console.log('================================================================');
 console.log('AREYOURARE — COMPLETE PRODUCTION END-TO-END VERIFICATION RUNNER');
@@ -220,14 +219,6 @@ const bestDiscoverySuite = runBestDiscoveryTests();
 bestDiscoverySuite.forEach((t) => {
   recordTest(t.id, t.name, () => {
     if (!t.passed) throw new Error(t.details || 'Failed Best Discovery test');
-  });
-});
-
-// 11. Google AdSense Monetization Layer Suite (4 Tests)
-const adSenseSuite = runAdSenseMonetizationTests();
-adSenseSuite.forEach((t) => {
-  recordTest(t.id, t.name, () => {
-    if (!t.passed) throw new Error(t.details || 'Failed AdSense test');
   });
 });
 
