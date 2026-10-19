@@ -28,6 +28,6 @@ jobs:
       - name: TypeScript strict check
         run: bun x tsc --noEmit
       - name: Birthday history + payment + responsive regression tests
-        run: node --import tsx --test tests/birthday-v2.test.ts tests/payments-v2.test.ts tests/layout-v2.test.mjs tests/launch-v2.test.mjs
+        run: node --import tsx --test tests/birthday-v2.test.ts tests/payments-v2.test.ts tests/layout-v2.test.mjs tests/launch-v2.test.mjs tests/language-v2.test.mjs
       - name: Next.js production build
         run: bun run build

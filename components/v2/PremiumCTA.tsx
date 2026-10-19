@@ -1,74 +1,59 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect,useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, Check, LockKeyhole, LoaderCircle } from 'lucide-react';
-export function PremiumCTA({date,paid}:{date:string;paid:boolean}) {
-  const [loading,setLoading]=useState(false);
-  const [availability,setAvailability]=useState<'loading'|'ready'|'disabled'>('loading');
-  const [testMode,setTestMode]=useState(false);
-  const [error,setError]=useState('');
-  useEffect(()=>{
-    const controller=new AbortController();
-    fetch('/api/checkout-availability',{signal:controller.signal,cache:'no-store'})
-      .then(res=>res.json())
-      .then((result:{available?:boolean;testMode?:boolean})=>{
-        if(controller.signal.aborted)return;
-        setAvailability(result.available?'ready':'disabled');
-        setTestMode(result.testMode===true);
-      }).catch(()=>{if(!controller.signal.aborted)setAvailability('disabled');});
-    return()=>controller.abort();
-  },[]);
-  async function checkout(){
-    if(loading||availability!=='ready')return;
-    setLoading(true);setError('');
-    try {
-      const res=await fetch('/api/checkout',{
-        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date})
-      });
-      const data=await res.json() as {checkoutUrl?:string;error?:string};
-      if(!res.ok||!data.checkoutUrl)throw new Error(data.error||'Checkout unavailable');
-      const url=new URL(data.checkoutUrl);
-      if(url.protocol!=='https:'||
-        !(url.hostname==='dodopayments.com'||url.hostname.endsWith('.dodopayments.com')))
-        throw new Error('Invalid secure checkout destination.');
-      window.location.assign(url.toString());
-    } catch(e){
-      setError(e instanceof Error?e.message:'Unable to start checkout.');
-      setLoading(false);
-    }
-  }
-  return <div className="premium">
-    <div className="eyebrow">✳ YOUR BIRTHDAY TIME CAPSULE</div>
-    <h2>Your birthday has <em>more stories.</em></h2>
-    <p>You've discovered one moment. Open the full historical timeline, explore the lives connected to your day, and keep your own source-linked Birthday Time Capsule.</p>
-    <div className="premium-benefits">
-      <span><Check size={15}/> Complete historical timeline</span>
-      <span><Check size={15}/> Famous birthday connections</span>
-      <span><Check size={15}/> Birth-year matches when available</span>
-      <span><Check size={15}/> Complete print-ready archive</span>
-    </div>
-    <div className="premium-bottom">
-      <strong>$2 <small>one time</small></strong>
-      {paid?
-        <Link href={'/capsule?date='+encodeURIComponent(date)} className="button-primary">
-          Open my capsule <ArrowUpRight size={18}/>
-        </Link>:
-        <button className="button-primary" type="button" onClick={checkout}
-          disabled={loading||availability!=='ready'}>
-          {loading||availability==='loading'?<LoaderCircle className="spin" size={18}/>:<LockKeyhole size={17}/>}
-          {loading?'Opening secure checkout…':availability==='loading'?'Checking checkout…':
-           availability==='disabled'?'Checkout temporarily unavailable':'Unlock the full archive'}
-          {!loading&&availability==='ready'&&<ArrowUpRight size={18}/>}
-        </button>}
-    </div>
-    {testMode&&availability==='ready'&&!paid&&
-      <p className="premium-note">TEST CHECKOUT · No real payment will be charged in test mode.</p>}
-    <p className="premium-note">
-      One-time purchase · No subscription · Instant unlock after verified payment.
-      {' '}<Link href="/terms">Terms</Link> · <Link href="/refunds">Refund support</Link>
-    </p>
-    {availability==='disabled'&&!paid&&
-      <p className="premium-note" role="status">Payments are being prepared. Your free discovery is still available.</p>}
-    {error&&<p className="form-error" role="alert">{error}</p>}
-  </div>;
+import { ArrowUpRight, Check,LockKeyhole,LoaderCircle } from 'lucide-react';
+import { useLanguage } from '@/components/v2/Language';
+
+export function PremiumCTA({date,paid}:{date:string;paid:boolean}){
+ const {tr}=useLanguage();
+ const [loading,setLoading]=useState(false);
+ const [available,setAvailable]=useState<'loading'|'ready'|'disabled'>('loading');
+ const [testMode,setTestMode]=useState(false),[error,setError]=useState('');
+ useEffect(()=>{
+  const ctrl=new AbortController();
+  fetch('/api/checkout-availability',{signal:ctrl.signal,cache:'no-store'})
+   .then(res=>res.json())
+   .then((data:{available?:boolean;testMode?:boolean})=>{
+    if(ctrl.signal.aborted)return;
+    setAvailable(data.available?'ready':'disabled');setTestMode(data.testMode===true);
+   }).catch(()=>{if(!ctrl.signal.aborted)setAvailable('disabled');});
+  return()=>ctrl.abort();
+ },[]);
+ async function checkout(){
+  if(loading||available!=='ready')return;
+  setLoading(true);setError('');
+  try{
+   const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date})});
+   const data=await res.json() as {checkoutUrl?:string;error?:string};
+   if(!res.ok||!data.checkoutUrl)throw new Error(data.error||tr('Checkout unavailable.','भुगतान अभी उपलब्ध नहीं है।'));
+   const url=new URL(data.checkoutUrl);
+   if(url.protocol!=='https:'||!(url.hostname==='dodopayments.com'||url.hostname.endsWith('.dodopayments.com')))
+    throw new Error(tr('Invalid checkout destination.','भुगतान लिंक सही नहीं है।'));
+   window.location.assign(url.toString());
+  }catch(e){setError(e instanceof Error?e.message:tr('Please try again.','फिर कोशिश करें।'));setLoading(false);}
+ }
+ return <div className="premium premium2">
+  <div className="premium2-tag">✳ {tr('UNLOCK YOUR COMPLETE HISTORY','पूरा इतिहास खोलें')}</div>
+  <div className="premium2-price"><strong>$2</strong><span>{tr('one-time payment','सिर्फ़ एक बार भुगतान')}</span></div>
+  <h2>{tr('One story is free.','एक कहानी मुफ़्त।')}<br/><em>{tr('The rest is yours.','बाकी सब आपका।')}</em></h2>
+  <div className="premium2-benefits">
+   <span><Check size={16}/>{tr('Full historical timeline','पूरी ऐतिहासिक समयरेखा')}</span>
+   <span><Check size={16}/>{tr('Famous birthdays','इसी दिन जन्मे प्रसिद्ध लोग')}</span>
+   <span><Check size={16}/>{tr('Complete downloadable report','पूरी रिपोर्ट डाउनलोड करें')}</span>
+  </div>
+  {paid?<Link className="button-primary premium2-button" href={'/capsule?date='+encodeURIComponent(date)}>
+    {tr('Open my report','मेरी रिपोर्ट खोलें')} <ArrowUpRight size={18}/>
+  </Link>:
+   <button type="button" onClick={checkout} className="button-primary premium2-button" disabled={loading||available!=='ready'}>
+    {loading||available==='loading'?<LoaderCircle className="spin" size={18}/>:<LockKeyhole size={17}/>}
+    {loading?tr('Opening payment…','भुगतान खुल रहा है…'):available==='loading'?tr('Checking checkout…','भुगतान जाँच रहे हैं…'):
+     available==='disabled'?tr('Payment temporarily unavailable','भुगतान अभी उपलब्ध नहीं'):
+     tr('Unlock full report — $2','पूरी रिपोर्ट खोलें — $2')}
+    <ArrowUpRight size={18}/>
+   </button>}
+  <p className="premium2-assurance">{tr('Secure checkout · Instant access · No subscription','सुरक्षित भुगतान · तुरंत एक्सेस · कोई सब्सक्रिप्शन नहीं')}</p>
+  {testMode&&available==='ready'&&!paid&&<p className="premium2-warning">{tr('TEST MODE — No live charge','टेस्ट मोड — असली भुगतान नहीं होगा')}</p>}
+  {available==='disabled'&&!paid&&<p className="form-error" role="status">{tr('Checkout is being prepared.','भुगतान सुविधा तैयार हो रही है।')}</p>}
+  {error&&<p className="form-error" role="alert">{error}</p>}
+ </div>;
 }

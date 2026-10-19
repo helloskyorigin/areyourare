@@ -6,12 +6,13 @@ export type HistoricalMoment = {
 };
 export type FreeHistory = {
   birthDate: string; dayLabel: string; birthYear: number;
-  featured: HistoricalMoment; person: HistoricalMoment | null;
-  preview: HistoricalMoment[]; exactDayYear: HistoricalMoment | null;
-  totals: { events: number; people: number; exact: number };
+  featured: HistoricalMoment;
   attribution: string;
 };
 export type FullHistory = FreeHistory & {
+  person: HistoricalMoment | null;
+  preview: HistoricalMoment[]; exactDayYear: HistoricalMoment | null;
+  totals: { events: number; people: number; exact: number };
   timeline: HistoricalMoment[]; people: HistoricalMoment[];
   deaths: HistoricalMoment[]; exactMatches: HistoricalMoment[];
 };
@@ -85,7 +86,10 @@ export async function loadHistory(date: Birthday): Promise<FullHistory> {
   };
 }
 export function freeHistory(h: FullHistory): FreeHistory {
-  return { birthDate:h.birthDate, dayLabel:h.dayLabel, birthYear:h.birthYear,
-    featured:h.featured, person:h.person, preview:h.preview, exactDayYear:h.exactDayYear,
-    totals:h.totals, attribution:h.attribution };
+  // Free mode intentionally returns ONE true historical moment.
+  // All other people, events, previews and paid metrics stay server-side.
+  return {
+    birthDate:h.birthDate,dayLabel:h.dayLabel,birthYear:h.birthYear,
+    featured:h.featured,attribution:h.attribution,
+  };
 }

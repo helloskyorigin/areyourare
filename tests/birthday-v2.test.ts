@@ -33,6 +33,11 @@ test('Wikimedia feed is curated and premium collections are not in free payload'
     assert.equal(full.timeline.length,3);
     assert.equal(full.exactMatches.length,1);
     assert.equal(full.totals.people,1);
+    assert.deepEqual(Object.keys(free).sort(),['attribution','birthDate','birthYear','dayLabel','featured'].sort());
+    assert.equal('person' in free,false);
+    assert.equal('preview' in free,false);
+    assert.equal('totals' in free,false);
+    assert.equal('exactDayYear' in free,false);
     assert.equal('timeline' in free,false);
     assert.equal('people' in free,false);
     assert.equal('exactMatches' in free,false);

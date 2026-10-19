@@ -4,6 +4,8 @@ import './globals.css';
 import './journey.css';
 import './layout-stability.css';
 import './launch.css';
+import './conversion.css';
+import { LanguageProvider } from '@/components/v2/Language';
 const display = Cormorant_Garamond({ subsets:['latin'], weight:['400','500','600','700'],style:['normal','italic'],display:'swap',variable:'--font-display' });
 const sans = Manrope({ subsets:['latin'],display:'swap',variable:'--font-sans' });
 export const metadata: Metadata = {
@@ -17,6 +19,6 @@ export const metadata: Metadata = {
 export default function RootLayout({children}:{children:React.ReactNode}){
  return <html lang="en" className={display.variable+' '+sans.variable}>
   <head><style>{':root{--serif:var(--font-display),Georgia,serif}'}</style></head>
-  <body>{children}</body>
+  <body><LanguageProvider>{children}</LanguageProvider></body>
  </html>;
 }

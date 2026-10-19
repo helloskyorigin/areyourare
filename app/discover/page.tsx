@@ -1,7 +1,13 @@
+'use client';
 import { SiteHeader,SiteFooter } from '@/components/v2/Brand';
 import { BirthdayForm } from '@/components/v2/BirthdayForm';
-export default function DiscoverPage() { return <div className="site"><SiteHeader/><main className="discover-center shell">
- <span className="eyebrow">✳ YOUR HISTORY AWAITS</span><h1>When did your <em>story begin?</em></h1>
- <p>Enter your birthday. We'll discover the historical moments and remarkable people connected to your date.</p>
- <BirthdayForm compact/><span className="discover-decoration" aria-hidden="true">✳</span>
- </main><SiteFooter/></div>; }
+import { useLanguage } from '@/components/v2/Language';
+export default function DiscoverPage(){
+ const {tr}=useLanguage();
+ return <div className="site"><SiteHeader/><main className="discover-center shell" id="main-content">
+  <span className="eyebrow">✳ {tr('START YOUR DISCOVERY','अपनी खोज शुरू करें')}</span>
+  <h1>{tr('When were','आपका जन्म')}<br/><em>{tr('you born?','कब हुआ था?')}</em></h1>
+  <p>{tr('Enter your birthday to discover one remarkable event for free.','जन्मतिथि भरें और इतिहास की एक खास घटना मुफ़्त जानें।')}</p>
+  <BirthdayForm compact/>
+ </main><SiteFooter/></div>;
+}

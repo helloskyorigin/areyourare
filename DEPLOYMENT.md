@@ -2,13 +2,13 @@
 
 **Public website:** https://areyourare.ai.studio
 
-This is a Wikipedia-powered birthday history product with one free discovery and one **$2 USD one-time** paid Time Capsule. Astronomy code remains archived in the repository but is not used by public V2 routes. Google AdSense has been removed.
+This is a birthday history discovery product with one free discovery and one **$2 USD one-time** paid Time Capsule. Astronomy code remains archived in the repository but is not used by public V2 routes. Google AdSense has been removed.
 
 ## Public user journey
 
 1. **/** or **/discover** — enter a valid date of birth (1900 through today).
 2. **/searching?date=YYYY-MM-DD** — live Wikimedia On This Day request. No artificial waiting; it moves immediately upon success.
-3. **/result?date=YYYY-MM-DD** — first historical story, Wikipedia source links, a notable birthday and two previews, plus a $2 checkout offer. The exact birth year is not misrepresented as an anniversary.
+3. **/result?date=YYYY-MM-DD** — ONE free historical event and source link, with $2 unlock positioned beside it on desktop and above the full event on mobile. The exact birth year is not misrepresented as an anniversary.
 4. **Dodo hosted checkout** — HTTPS, server-created one-time product checkout, not a hardcoded payment link. If checkout is not configured, the purchase button visibly disables.
 5. **/payment/return?date=...** — handles successful/failed/pending/cancelled checkout. It polls the server for a real purchase status, then **automatically redirects to /capsule only when Dodo confirms successful payment**.
 6. **/capsule?date=...** — premium API is protected server-side, shows full searchable historical collections, a complete print-to-PDF report and a private recovery-link action.
@@ -37,6 +37,7 @@ From the approved merchant's own **Dodo Payments dashboard**:
 
 - Valid DOB, invalid DOB, leap-day DOB, and future DOB.
 - Wikimedia API normal response, unexpected empty data, transient outage, appropriate source attribution.
+- English/Hindi language switching on landing, searching, free result, paid report and payment return. For Hindi, set `GOOGLE_CLOUD_TRANSLATE_API_KEY` on the server and verify translated event titles, descriptions and full report.
 - Mobile layout at 320, 360, 375, 390, 768, 1024 and 1440px, dark contrast, no sideways scroll; low bandwidth, reduced-motion.
 - GET /api/health -> \`checkoutAvailable\` true when expected. GET /api/checkout-availability -> \`available:true\` and \`testMode:true\` during sandbox.
 - $2 Dodo **successful sandbox payment**, session URL redirect, /payment/return polling, automatic premium unlock; directly accessing /api/capsule without payment returns 403.
@@ -79,3 +80,11 @@ The \`test\` scripts mock Dodo and Wikipedia. **They do not prove that live cred
 ### Current integration limitation
 
 Live credentials, legal merchant approval, payout status, domain routing and actual deployed environment cannot be validated from source code alone. No production sales should begin until these external steps have been completed and checked. Test-mode is the default for safety.
+
+## Language / भाषा
+
+- Default: English. Header language switch persists in localStorage between navigation. Hindi switches all active V2 product screens and translatable historical records.
+- The Free API intentionally returns **only one featured event**. All other events, notable birthdays, counts and previews remain on the paid API.
+- Server-side Hindi translation uses **Google Cloud Translation Basic v2**, never a public/browser API key. Enable billing, Translation API, quotas and key restrictions in your Google Cloud project. Set `GOOGLE_CLOUD_TRANSLATE_API_KEY` on the hosting provider (server only). The API returns a visible Hindi error if full translation is unavailable, rather than quietly pretending English content is Hindi.
+- Verify Hindi translation quality, accessibility and monetary translation usage before opening Hindi public traffic. Translation is a real provider dependency, not available from GitHub source alone.
+- Public marketing avoids “Wikipedia-powered” branding; source article links and legal/source attribution remain as required.

@@ -1,5 +1,2 @@
-import { SiteHeader,SiteFooter } from '@/components/v2/Brand';
-export default function RefundsPage(){return <div className="site"><SiteHeader/><main className="legal-page shell"><span className="eyebrow">AREYOURARE / PURCHASES</span><h1>Refunds &amp; <em>Support.</em></h1>
-<p>The Birthday Time Capsule is a one-time digital purchase. Refund eligibility depends on applicable consumer law and the payment provider's policies. These terms do not remove any mandatory statutory rights.</p>
-<h2>Need help opening a paid report?</h2><p>Purchased access is verified by Dodo Payments. Save your private recovery link from the Time Capsule if you want to reopen it on another device. If payment succeeded but your report does not open, your link expired, or you were charged incorrectly, contact us using the checkout email and receipt details. Never send card numbers or payment passwords.</p>
-<h2>Contact</h2><p>Email <a href="mailto:hello.skyorigin@gmail.com">hello.skyorigin@gmail.com</a> with the subject “AREYOURARE payment support”. We will review purchase issues and applicable refund requests.</p></main><SiteFooter/></div>;}
+import { LegalPage } from '@/components/v2/Legal';
+export default function Page(){return <LegalPage kind="refunds"/>;}
