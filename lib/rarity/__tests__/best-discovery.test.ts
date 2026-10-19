@@ -352,7 +352,7 @@ export function runBestDiscoveryTests(): BestDiscoveryTestCase[] {
           throw new Error('MATCHED_PATTERN did not have pat_ prefix');
         }
         if (verified.discovery.sectionLabel !== 'YOUR STRONGEST DISCOVERY') {
-          throw new Error(`Wrong sectionLabel for MATCHED_PATTERN: ${verified.discovery.sectionLabel}`);
+          throw new Error(`Wrong sectionLabel for MATCHED_PATTERN`);
         }
       } else if (
         verified.discoveryType === 'CONTINUOUS_FEATURE' &&
@@ -363,7 +363,7 @@ export function runBestDiscoveryTests(): BestDiscoveryTestCase[] {
           throw new Error('CONTINUOUS_FEATURE did not have feat_ prefix');
         }
         if (verified.discovery.sectionLabel !== 'YOUR MOST UNUSUAL ALIGNMENT') {
-          throw new Error(`Wrong sectionLabel for CONTINUOUS_FEATURE: ${verified.discovery.sectionLabel}`);
+          throw new Error(`Wrong sectionLabel for CONTINUOUS_FEATURE`);
         }
         if (typeof verified.discovery.measurement.distanceFromIdeal !== 'number') {
           throw new Error('CONTINUOUS_FEATURE missing measurement.distanceFromIdeal');
@@ -456,6 +456,7 @@ export function runBestDiscoveryTests(): BestDiscoveryTestCase[] {
     }
 
     const continuous = patterns.continuousFeatures;
+    if (!continuous) throw new Error('Expected continuous feature array in DATE_ONLY mode');
     const hasAngularFeatures = continuous.some((f) => f.category === 'angular');
     if (hasAngularFeatures) {
       throw new Error('Continuous features still contain angular features in DATE_ONLY mode');

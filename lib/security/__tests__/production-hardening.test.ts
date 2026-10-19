@@ -139,7 +139,7 @@ export function runProductionHardeningTests(): ProductionTestResult[] {
     const chart1 = calculateBirthChart(input1);
     const chart2 = calculateBirthChart(input2);
 
-    if (chart1.sun.longitude === chart2.sun.longitude) {
+    if (chart1.planets.Sun.longitude === chart2.planets.Sun.longitude) {
       throw new Error('Concurrent state leak detected between separate chart calculations.');
     }
 
@@ -149,7 +149,7 @@ export function runProductionHardeningTests(): ProductionTestResult[] {
     const rarity1 = calculateUserRarity(patterns1);
     const rarity2 = calculateUserRarity(patterns2);
 
-    if (rarity1.rarestPattern?.patternId === rarity2.rarestPattern?.patternId && chart1.sun.sign === chart2.sun.sign) {
+    if (rarity1.rarestPattern?.patternId === rarity2.rarestPattern?.patternId && chart1.planets.Sun.sign === chart2.planets.Sun.sign) {
       throw new Error('Unexpected identical pattern outputs across differing inputs.');
     }
   });

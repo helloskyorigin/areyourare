@@ -14,7 +14,7 @@ export function LandingMotion() {
           for (const entry of entries) {
             if (entry.isIntersecting) {
               entry.target.classList.add('motion-in');
-              observer.unobserve(entry.target);
+              observer?.unobserve(entry.target);
             }
           }
         }, { threshold: 0.07, rootMargin: '0px 0px -25px 0px' })
