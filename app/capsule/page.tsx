@@ -2,7 +2,7 @@
 import { Suspense,useEffect,useMemo,useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { ArrowLeft,ArrowUpRight,BookOpen,Download,Heart,Search,ShieldCheck,ArrowRight } from 'lucide-react';
+import { ArrowLeft,ArrowUpRight,BookOpen,Download,Heart,Search,ShieldCheck,ArrowRight,Copy,Link2,Check } from 'lucide-react';
 import { parseBirthday,monthName } from '@/lib/birthday';
 import type { FullHistory,HistoricalMoment } from '@/lib/history';
 import { SiteHeader,SiteFooter } from '@/components/v2/Brand';
@@ -13,6 +13,19 @@ function Capsule(){
  const [data,setData]=useState<FullHistory|null>(null),[loading,setLoading]=useState(true),[error,setError]=useState('');
  const [tab,setTab]=useState<Tab>('events'),[query,setQuery]=useState(''),[count,setCount]=useState(12);
  const [favorites,setFavorites]=useState<string[]>([]);
+ const [linkState,setLinkState]=useState<'idle'|'copied'|'error'>('idle');
+ async function copyRecoveryLink(){
+   if(!data||!birth)return;
+   try{
+     setLinkState('idle');
+     const res=await fetch('/api/recovery-link?date='+encodeURIComponent(date),{cache:'no-store'});
+     const json=await res.json() as {recoveryUrl?:string;error?:string};
+     if(!res.ok||!json.recoveryUrl)throw new Error(json.error||'Link unavailable');
+     await navigator.clipboard.writeText(json.recoveryUrl);
+     setLinkState('copied');
+   }catch{setLinkState('error');}
+ }
+
  useEffect(()=>{
   if(!birth){setError('Choose a valid birth date.');setLoading(false);return;}
   const controller=new AbortController();
@@ -40,7 +53,14 @@ function Capsule(){
   <section className="capsule-summary shell"><div><strong>{data.timeline.length}</strong><span>HISTORICAL EVENTS</span></div><div><strong>{data.people.length}</strong><span>NOTABLE BIRTHDAYS</span></div><div><strong>{data.exactMatches.length}</strong><span>EXACT-YEAR EVENTS</span></div></section>
   <section className="capsule-archive shell" id="archive">
    <div className="capsule-archive-head"><div><span className="eyebrow">01 / EXPLORE YOUR ARCHIVE</span><h2>Centuries of stories.<br/><em>One shared day.</em></h2><p>Explore and search real historical entries. Follow Wikipedia links to learn more.</p></div>
-    <button type="button" className="button-secondary print-button" onClick={()=>window.print()}><Download size={17}/> Save / print PDF</button></div>
+    <div className="capsule-utility-actions">
+    <button type="button" className="button-secondary" onClick={copyRecoveryLink}><Link2 size={17}/> {linkState==='copied'?'Private link copied':'Copy private recovery link'}</button>
+    <button type="button" className="button-secondary print-button" onClick={()=>window.print()}><Download size={17}/> Download / print complete PDF</button>
+    </div></div>
+    <p className="capsule-recovery-note" role="status">{linkState==='error'?
+      'Could not copy the link. Your browser may need clipboard permission. Contact support if the issue persists.':
+      linkState==='copied'?'Saved to your clipboard. Store it privately: anyone with this link can open your paid report until it expires.':
+      'Save a private recovery link before clearing your browser. It can reopen this purchased report on another device for up to 180 days from checkout.'}</p>
    <div className="capsule-tabs" role="tablist" aria-label="Historical record categories">
     <button role="tab" aria-selected={tab==='events'} className={tab==='events'?'active':''} onClick={()=>{setTab('events');setCount(12);}}>Historical timeline <span>{data.timeline.length}</span></button>
     <button role="tab" aria-selected={tab==='people'} className={tab==='people'?'active':''} onClick={()=>{setTab('people');setCount(12);}}>Famous birthdays <span>{data.people.length}</span></button>
@@ -52,6 +72,28 @@ function Capsule(){
     <button className={'favorite-button '+(favorites.includes(item.id)?'is-favorite':'')} onClick={()=>toggle(item)} title="Save to favorites for this visit" aria-label={favorites.includes(item.id)?'Remove from favorites':'Add to favorites'}><Heart size={19} fill={favorites.includes(item.id)?'currentColor':'none'}/></button>
    </article>)}</div>:<div className="archive-empty"><BookOpen size={27}/><h3>No stories in this section yet.</h3><p>{tab==='year'?'Wikipedia may not have a listed event for your exact birthday and birth year. Your wider birthday timeline is still waiting.':'Try another search or category.'}</p></div>}
    {entries.length>count&&<button className="button-secondary more-button" onClick={()=>setCount(x=>x+12)}>Explore more stories <ArrowRight size={17}/></button>}
+  </section>
+  <section className="capsule-print-report" aria-label="Full printed birthday archive">
+    <h1>AREYOURARE · YOUR BIRTHDAY TIME CAPSULE</h1>
+    <p>{data.dayLabel} · Born {data.birthYear}</p>
+    <p>These are historical events and notable birthdays documented on the same calendar day in different years. They are not predictions.</p>
+    <h2>Complete historical timeline ({data.timeline.length})</h2>
+    {data.timeline.map(item=><article className="capsule-print-item" key={'print-event-'+item.id}>
+      <h3>{item.year} · {item.title}</h3><p>{item.text}</p>
+      {item.source&&<p className="capsule-print-source">Source: {item.source}</p>}
+    </article>)}
+    <h2>Notable birthdays ({data.people.length})</h2>
+    {data.people.map(item=><article className="capsule-print-item" key={'print-birth-'+item.id}>
+      <h3>{item.year} · {item.title}</h3><p>{item.text}</p>
+      {item.source&&<p className="capsule-print-source">Source: {item.source}</p>}
+    </article>)}
+    <h2>Exact birth-year matches ({data.exactMatches.length})</h2>
+    {!data.exactMatches.length&&<p>None documented for this exact month, day and birth year in the current feed.</p>}
+    {data.exactMatches.map(item=><article className="capsule-print-item" key={'print-year-'+item.id}>
+      <h3>{item.year} · {item.title}</h3><p>{item.text}</p>
+      {item.source&&<p className="capsule-print-source">Source: {item.source}</p>}
+    </article>)}
+    <p className="capsule-print-credit">Source: Wikipedia / Wikimedia contributors. Article text and media are subject to their original licenses. Retrieved for personal historical discovery.</p>
   </section>
   <section className="archive-conclusion shell"><ShieldCheck size={23}/><div><h3>Real history. Open sources.</h3><p>Historical events and birth dates are provided by Wikipedia and its contributors. Read the original articles for fuller context and licensing. We never invent exact-year matches or predict your life from the date you were born.</p></div></section>
   </main><SiteFooter/></div>;
