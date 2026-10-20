@@ -13,25 +13,29 @@ function Capsule(){
  const params=useSearchParams(),date=params.get('date')||'',birth=parseBirthday(date);
  const {lang,tr}=useLanguage();
  const [data,setData]=useState<FullHistory|null>(null),[loading,setLoading]=useState(true),[error,setError]=useState('');
+ const [accessDenied,setAccessDenied]=useState(false),[retry,setRetry]=useState(0);
  const [tab,setTab]=useState<Tab>('events'),[query,setQuery]=useState(''),[count,setCount]=useState(12);
  const [favorites,setFavorites]=useState<string[]>([]);
  const [linkState,setLinkState]=useState<'idle'|'copied'|'error'>('idle');
  useEffect(()=>{
   if(!parseBirthday(date)){setError(tr('Choose a valid date.','सही जन्मतिथि चुनें।'));setLoading(false);return;}
   const ctrl=new AbortController();
-  setLoading(true);setError('');setData(null);
+  setLoading(true);setError('');setAccessDenied(false);setData(null);
   async function load(){
    try{
     const resp=await fetch('/api/capsule?date='+encodeURIComponent(date)+'&lang='+lang,{signal:ctrl.signal,cache:'no-store'});
     const json=await resp.json() as FullHistory&{error?:string};
-    if(!resp.ok)throw new Error(json.error||tr('Unable to open report.','रिपोर्ट नहीं खुल पा रही है।'));
+    if(!resp.ok){
+      if(resp.status===403)setAccessDenied(true);
+      throw new Error(json.error||tr('Unable to open report.','रिपोर्ट नहीं खुल पा रही है।'));
+    }
     if(!ctrl.signal.aborted)setData(json);
    }catch(e){if(!ctrl.signal.aborted)setError(e instanceof Error?e.message:tr('Please retry.','फिर कोशिश करें।'));}
    finally{if(!ctrl.signal.aborted)setLoading(false);}
   }
   void load();
   return()=>ctrl.abort();
- },[date,lang,tr]);
+ },[date,lang,tr,retry]);
  const entries=useMemo(()=>{
   if(!data)return [];
   const list=tab==='events'?data.timeline:tab==='people'?data.people:data.exactMatches;
@@ -53,9 +57,10 @@ function Capsule(){
  if(loading)return <div className="site loading-state"><div className="loader-line"/><p>{tr('Opening your full report…','आपकी पूरी रिपोर्ट खुल रही है…')}</p></div>;
  if(!data||!birth||error)return <div className="site"><SiteHeader/><main className="state-message shell">
   <span className="eyebrow">{tr('PAYMENT VERIFICATION','भुगतान की पुष्टि')}</span>
-  <h1>{tr('Your report is still locked.','आपकी रिपोर्ट अभी लॉक है।')}</h1>
+  <h1>{accessDenied?tr('Your report is still locked.','आपकी रिपोर्ट अभी लॉक है।'):tr('Your report could not be loaded.','आपकी रिपोर्ट अभी नहीं खुल पाई।')}</h1>
   <p>{error||tr('Please return to your result.','कृपया रिज़ल्ट पर वापस जाएँ।')}</p>
-  <p>{tr('Open this page in the browser used for checkout, or use a saved private recovery link.','भुगतान वाले ब्राउज़र में यह पेज खोलें, या अपना निजी रिकवरी लिंक इस्तेमाल करें।')}</p>
+  <p>{accessDenied?tr('Use the browser used for checkout, or a saved private recovery link.','भुगतान वाले ब्राउज़र या निजी रिकवरी लिंक का उपयोग करें।'):tr('Your payment has not been marked as failed. Retry loading the report; you will not be charged again.','आपका भुगतान असफल नहीं माना गया है। रिपोर्ट फिर खोलें; दोबारा शुल्क नहीं लगेगा।')}</p>
+  {!accessDenied&&<button type="button" className="button-primary" onClick={()=>setRetry(n=>n+1)}>{tr('Retry loading report','रिपोर्ट फिर खोलें')}</button>}
   <Link className="button-primary" href={'/unlock?date='+encodeURIComponent(date)}>{tr('Back to date preview','अपनी तारीख की झलक पर जाएँ')} <ArrowLeft size={17}/></Link>
  </main><SiteFooter/></div>;
 

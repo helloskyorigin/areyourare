@@ -41,6 +41,13 @@ test('payment config requires a strong secret and a configured Dodo product',()=
   assert.equal(checkoutReady(),true);
   assert.equal(cookieNameForDate(receipt.date),'ayr_purchase_20000720');
   assert.ok(remainingCookieSeconds(receipt)>0);
+  process.env.DODO_MODE='';
+  assert.equal(checkoutReady(),false,'missing mode must not silently enable test payments');
+  process.env.DODO_MODE='livemode';
+  assert.equal(checkoutReady(),false,'invalid mode must fail closed');
+  process.env.DODO_MODE='live_mode';
+  assert.equal(checkoutReady(),true);
+  process.env.DODO_MODE='test_mode';
 });
 test('signed receipt is date-scoped, and tampering invalidates it',()=>{
   const token=encodeReceipt(receipt);
@@ -77,6 +84,8 @@ test('fake or incomplete provider responses never unlock premium',async()=>{
   assert.deepEqual(await statusForReceipt(receipt,receipt.date),{state:'refunded',paid:false});
   withProvider({...validPayment,refund_status:'partial'});
   assert.equal((await statusForReceipt(receipt,receipt.date)).paid,false);
+  withProvider({...validPayment,refunds:[{status:'succeeded'}]});
+  assert.deepEqual(await statusForReceipt(receipt,receipt.date),{state:'refunded',paid:false});
 });
 test('checkout redirects to our provider-confirmed return route',async()=>{
   globalThis.fetch=(async (_input:RequestInfo|URL,init?:RequestInit)=>{
@@ -84,6 +93,8 @@ test('checkout redirects to our provider-confirmed return route',async()=>{
     const body=JSON.parse(String(init?.body));
     assert.equal(body.product_cart[0].product_id,process.env.DODO_PRODUCT_ID);
     assert.equal(body.return_url,'https://areyourare.ai.studio/payment/return?date=2000-07-20');
+    assert.equal(body.cancel_url,'https://areyourare.ai.studio/unlock?date=2000-07-20');
+    assert.deepEqual(body.metadata,{product:'birthday_time_capsule_v2',birthday:receipt.date});
     return new Response(JSON.stringify({
       session_id:'cks_0123456789verified',
       checkout_url:'https://test.checkout.dodopayments.com/session/cks_0123456789verified',

@@ -10,8 +10,12 @@ export type PurchaseState = 'paid' | 'pending' | 'failed' | 'cancelled' | 'not_s
 export type PurchaseStatus = { state: PurchaseState; paid: boolean };
 
 const cookieSecret = () => process.env.PURCHASE_COOKIE_SECRET || '';
-const baseUrl = () => process.env.DODO_MODE === 'live_mode'
-  ? 'https://live.dodopayments.com' : 'https://test.dodopayments.com';
+const validDodoMode = () => process.env.DODO_MODE === 'live_mode' || process.env.DODO_MODE === 'test_mode';
+const baseUrl = () => {
+  if (!validDodoMode()) throw new Error('DODO_MODE_NOT_CONFIGURED');
+  return process.env.DODO_MODE === 'live_mode'
+    ? 'https://live.dodopayments.com' : 'https://test.dodopayments.com';
+};
 const isSessionId = (v: unknown): v is string => typeof v === 'string' && /^cks_[A-Za-z0-9_-]{6,120}$/.test(v);
 const isPaymentId = (v: unknown): v is string => typeof v === 'string' && /^pay_[A-Za-z0-9_-]{6,120}$/.test(v);
 const isDate = (v: unknown): v is string => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
@@ -20,7 +24,8 @@ export function cookieNameForDate(date: string): string {
   return 'ayr_purchase_' + date.replaceAll('-', '');
 }
 export function checkoutReady(): boolean {
-  return cookieSecret().length >= 24 &&
+  // Never silently use Dodo sandbox because a production mode variable is missing/typoed.
+  return validDodoMode() && cookieSecret().length >= 24 &&
     Boolean(process.env.DODO_PAYMENTS_API_KEY) &&
     /^pdt_[A-Za-z0-9_-]+$/.test(process.env.DODO_PRODUCT_ID || '');
 }
@@ -101,6 +106,7 @@ export async function createCheckout(date: string, siteOrigin: string): Promise<
       product_cart:[{product_id:process.env.DODO_PRODUCT_ID,quantity:1}],
       metadata:{product:'birthday_time_capsule_v2',birthday:date},
       return_url:siteOrigin + '/payment/return?date=' + encodeURIComponent(date),
+      cancel_url:siteOrigin + '/unlock?date=' + encodeURIComponent(date),
     }),
   }) as { session_id?: unknown; checkout_url?: unknown };
   if (!isSessionId(result.session_id) || typeof result.checkout_url !== 'string')
@@ -116,6 +122,7 @@ type PaymentResponse = {
   status?: unknown; metadata?: Record<string, unknown> | null;
   product_cart?: { product_id?: string; quantity?: number }[] | null;
   checkout_session_id?: unknown; refund_status?: unknown;
+  refunds?: {status?:string}[] | null;
   disputes?: unknown[] | null;
 };
 export async function statusForReceipt(receipt: Receipt, date: string): Promise<PurchaseStatus> {
@@ -131,7 +138,8 @@ export async function statusForReceipt(receipt: Receipt, date: string): Promise<
     const payment = await dodo('/payments/' + encodeURIComponent(checkout.payment_id)) as PaymentResponse;
     if (payment.status !== 'succeeded') return {state:'pending',paid:false};
     // A refunded purchase cannot continue to unlock the report.
-    if (payment.refund_status === 'full' || payment.refund_status === 'partial')
+    if (payment.refund_status === 'full' || payment.refund_status === 'partial' ||
+        payment.refunds?.some(refund => refund.status === 'succeeded'))
       return {state:'refunded',paid:false};
     // All identifiers and purchase metadata must agree. A URL query is NEVER proof.
     if (payment.checkout_session_id !== receipt.sessionId ||

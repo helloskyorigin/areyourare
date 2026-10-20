@@ -45,6 +45,10 @@ Do not put production secrets in GitHub, chat or client-side bundles. Sandbox ke
 - Test server-side Hindi translation and complete printable PDF; verify cost and text quality.
 - Confirm Dodo's actual $2 product price and taxes/currency display in your merchant dashboard. Verify production payouts, business identity, legal requirements, return URL and approved payment status. Payment code alone does not establish merchant readiness.
 - Marketing does not describe the experience as “Wikipedia-powered”; original source article links and licensing/attribution remain where applicable. Do not imply AREYOURARE owns third-party historical material.
-- No durable purchase DB, webhook ingestion or account-based email recovery is configured. Keep this limitation in mind before scaling.
+- No durable purchase DB, webhook ingestion or account-based email recovery is configured.
+- **Live release:** set `DODO_MODE=live_mode` plus live API key and the live `$2 USD` AreYouRare one-time Product ID. Mode must be explicitly valid or checkout stays disabled. Never reuse the StrangerLens product ID.
+- Checkout cancellations now return to the same date's `/unlock` screen. Purchase verification checks Dodo checkout + payment, product, date, successful status and refunds, not browser-provided success flags. No webhook secret is required for this polling-based implementation.
+- If checkout returns a 503, check server logs for `PROVIDER_HTTP_401` (bad key/mode), `PROVIDER_HTTP_403` (permission/approval) or `PROVIDER_HTTP_404` (wrong product or account). Never paste live keys into GitHub/issues.
+- A **real $2 payment remains unverified** until a live Dodo checkout transaction and report unlock test is performed on the deployed domain. Keep this limitation in mind before scaling.
 
 **Code pushed does not mean deployed or real-payment tested.** Release only after live hosting and sandbox acceptance checks.

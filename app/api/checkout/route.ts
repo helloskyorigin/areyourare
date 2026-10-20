@@ -33,7 +33,16 @@ export async function POST(request: NextRequest) {
       path:'/',maxAge:COOKIE_DAYS*86400,
     });
     return response;
-  } catch {
-    return NextResponse.json({error:'Could not open the payment page. Please try again.'},{status:502});
+  } catch (error) {
+    // Log only a safe failure category. Never log credentials, request bodies or customers.
+    const code=error instanceof Error && /^PROVIDER_HTTP_\d{3}$/.test(error.message)
+      ? error.message : 'CHECKOUT_PROVIDER_UNAVAILABLE';
+    console.error('[AreYouRare checkout]',code);
+    const configurationFailure=['PROVIDER_HTTP_401','PROVIDER_HTTP_403','PROVIDER_HTTP_404'].includes(code);
+    return NextResponse.json({
+      error:configurationFailure
+        ? 'Checkout is temporarily unavailable. Please contact support if this persists.'
+        : 'Could not open the payment page. Please try again.',
+    },{status:configurationFailure?503:502,headers:{'Cache-Control':'no-store'}});
   }
 }
