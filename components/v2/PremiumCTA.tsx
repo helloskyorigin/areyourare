@@ -3,6 +3,7 @@ import { useEffect,useState } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, Check,LockKeyhole,LoaderCircle } from 'lucide-react';
 import { useLanguage } from '@/components/v2/Language';
+import { parseCheckoutResponse } from '@/lib/checkout-response';
 
 export function PremiumCTA({date,paid}:{date:string;paid:boolean}){
  const {tr}=useLanguage();
@@ -23,10 +24,9 @@ export function PremiumCTA({date,paid}:{date:string;paid:boolean}){
   if(loading||available!=='ready')return;
   setLoading(true);setError('');
   try{
-   const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date})});
-   const data=await res.json() as {checkoutUrl?:string;error?:string};
-   if(!res.ok||!data.checkoutUrl)throw new Error(data.error||tr('Checkout unavailable.','भुगतान अभी उपलब्ध नहीं है।'));
-   const url=new URL(data.checkoutUrl);
+   const res=await fetch('/api/checkout',{method:'POST',cache:'no-store',credentials:'same-origin',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({date})});
+   const checkoutUrl=await parseCheckoutResponse(res);
+   const url=new URL(checkoutUrl);
    if(url.protocol!=='https:'||!(url.hostname==='dodopayments.com'||url.hostname.endsWith('.dodopayments.com')))
     throw new Error(tr('Invalid checkout destination.','भुगतान लिंक सही नहीं है।'));
    window.location.assign(url.toString());

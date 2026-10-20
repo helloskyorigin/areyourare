@@ -5,6 +5,7 @@ import {
   readRecoveryToken, statusForReceipt, cookieNameForDate, remainingCookieSeconds,
   type Receipt,
 } from '../lib/payments';
+import { parseCheckoutResponse } from '../lib/checkout-response';
 
 const originalFetch=globalThis.fetch;
 const previous={
@@ -103,6 +104,26 @@ test('checkout redirects to our provider-confirmed return route',async()=>{
   const session=await createCheckout(receipt.date,'https://areyourare.ai.studio');
   assert.equal(session.sessionId,receipt.sessionId);
   assert.ok(session.checkoutUrl.startsWith('https://test.checkout.dodopayments.com/'));
+});
+test('checkout browser safely handles HTML responses from missing API routes',async()=>{
+  const html=new Response('<html><head>Error</head></html>',{
+    status:200,headers:{'Content-Type':'text/html; charset=utf-8'}
+  });
+  await assert.rejects(parseCheckoutResponse(html),/web page instead of checkout data \(HTTP 200\)/);
+  const page404=new Response('<html>404</html>',{
+    status:404,headers:{'Content-Type':'text/html'}
+  });
+  await assert.rejects(parseCheckoutResponse(page404),/HTTP 404/);
+});
+test('checkout browser accepts JSON success and readable JSON errors',async()=>{
+  const ok=new Response(JSON.stringify({checkoutUrl:'https://checkout.dodopayments.com/example'}),{
+    status:200,headers:{'Content-Type':'application/json'}
+  });
+  assert.equal(await parseCheckoutResponse(ok),'https://checkout.dodopayments.com/example');
+  const bad=new Response(JSON.stringify({error:'Checkout unavailable'}),{
+    status:503,headers:{'Content-Type':'application/json'}
+  });
+  await assert.rejects(parseCheckoutResponse(bad),/Checkout unavailable/);
 });
 test.after(()=>{
   globalThis.fetch=originalFetch;

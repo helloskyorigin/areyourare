@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { parseBirthday } from '@/lib/birthday';
 import { checkoutReady, createCheckout, encodeReceipt, cookieNameForDate, COOKIE_DAYS } from '@/lib/payments';
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+// Safe read-only diagnostics: if this URL returns HTML in the deployed site,
+// the Next.js API server was not deployed/routed correctly.
+export async function GET() {
+  return NextResponse.json({route:'areyourare-checkout',method:'POST',available:checkoutReady(),mode:process.env.DODO_MODE==='live_mode'?'live':'test'},
+    {headers:{'Cache-Control':'no-store'}});
+}
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
   if (origin && origin !== request.nextUrl.origin) {

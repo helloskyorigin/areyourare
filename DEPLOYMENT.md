@@ -52,3 +52,13 @@ Do not put production secrets in GitHub, chat or client-side bundles. Sandbox ke
 - A **real $2 payment remains unverified** until a live Dodo checkout transaction and report unlock test is performed on the deployed domain. Keep this limitation in mind before scaling.
 
 **Code pushed does not mean deployed or real-payment tested.** Release only after live hosting and sandbox acceptance checks.
+
+## Diagnosing checkout HTML/JSON errors
+
+If the pay button reports **"Payment API returned a web page instead of checkout data"**, the browser is receiving HTML from POST /api/checkout, not the JSON returned by the Next.js route. This happens with a stale/static deployment, an AI Studio preview proxy, wrong app deployment, or an upstream routing/error page. It is **not evidence that the Dodo API key is incorrect**. This code now shows a controlled diagnostic instead of `Unexpected token '<'`.
+
+1. On the **published domain** (not an editor/preview link), visit `https://areyourare.ai.studio/api/checkout`. It must return JSON containing `"route":"areyourare-checkout"`; GET is intentionally diagnostic and never creates a charge. HTML means the API route is not deployed.
+2. Visit `https://areyourare.ai.studio/api/health`: it must return JSON and, for real payments, `checkoutAvailable:true` and `mode:"live"`. These mean local configuration is present, **not** that a charge was tested.
+3. Deploy the **full Next.js server**, not only exported/static HTML. In Google AI Studio, pull the latest GitHub changes and republish the full-stack Cloud Run app; the preview proxy is not a substitute for validating the production hostname. Check Cloud Run request logs for POST `/api/checkout` (especially 404/403/500/502).
+4. If the GET diagnostic works but checkout does not, inspect POST response status/content-type in browser Network tab and check safe server logs. Check that live API key, live $2 product and mode are correct and belong to the same approved business.
+5. Verify in Dodo sandbox that payment success returns to `/payment/return`, provider-side verification unlocks `/result`, and unpaid sessions cannot read `/api/capsule`. Confirm live checkout separately before taking customer payments.
