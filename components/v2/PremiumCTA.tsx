@@ -23,6 +23,14 @@ export function PremiumCTA({date,paid}:{date:string;paid:boolean}){
  async function checkout(){
   if(loading||available!=='ready')return;
   setLoading(true);setError('');
+  // AI Studio's embedded preview is not the published payment host. An API
+  // request from the preview can be answered by the editor's HTML proxy instead
+  // of the Next.js server. Start payments on the canonical deployed origin so
+  // checkout cookies and the verified return route share the same host.
+  if(window.location.origin !== 'https://areyourare.ai.studio'){
+   window.location.assign('https://areyourare.ai.studio/unlock?date='+encodeURIComponent(date));
+   return;
+  }
   try{
    const res=await fetch('/api/checkout',{method:'POST',cache:'no-store',credentials:'same-origin',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({date})});
    const checkoutUrl=await parseCheckoutResponse(res);

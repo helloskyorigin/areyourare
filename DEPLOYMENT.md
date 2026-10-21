@@ -68,3 +68,11 @@ If the pay button reports **"Payment API returned a web page instead of checkout
 - Dodo's official `Payment.product_cart` can be omitted. New checkouts sign the configured product ID into the HttpOnly receipt; the server still independently verifies the session ID, succeeded payment ID, metadata, birthday, and refunds. If `product_cart` is supplied, it must match exactly. Legacy cookies without a product ID cannot use the fallback.
 - A trusted forwarded public HTTPS origin no longer triggers false `Invalid request origin` when the Next.js runtime uses an internal HTTP request URL. A 403 **HTML** from the upstream preview proxy is outside this Next.js route and requires the published deployment/host to be fixed.
 - Confirm the published `GET /api/checkout` returns JSON. Test `POST /api/checkout` from the **published website** and inspect request/response in the browser Network panel before asserting Dodo is broken.
+
+## AI Studio preview protection (2026-10-21)
+
+The Pay button now navigates any non-production editor/preview host to `https://areyourare.ai.studio/unlock?date=...` before starting Dodo checkout. This avoids POSTing `/api/checkout` to the AI Studio editor proxy, which can respond with HTML HTTP 200 rather than the app's JSON. Cookies remain on the same published domain used by the return handler.
+
+To finish configuration, **publish the latest full-stack Next.js build**, then on the published host verify `GET /api/checkout` returns JSON and `GET /api/checkout-availability` reports `available:true` and `testMode:false`. A JSON response alone does not prove a live charge.
+
+If POST to `/api/checkout` still returns HTML on the published host, that response is from a proxy/static fallback before the Next.js JSON handler; inspect Cloud Run request logs / service deployment. Dodo settings cannot cause the application route to return an HTML 200 (the handler catches provider errors and responds with JSON).
