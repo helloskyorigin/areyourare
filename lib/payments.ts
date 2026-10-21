@@ -5,7 +5,9 @@ export const PURCHASE_COOKIE = 'ayr_birthday_purchase'; // Backward compatibilit
 export const COOKIE_DAYS = 180;
 const COOKIE_LIFETIME = COOKIE_DAYS * 86400;
 const EXPIRY_MS = COOKIE_LIFETIME * 1000;
-export type Receipt = { sessionId: string; date: string; createdAt: number };
+// productId is embedded in a server-signed cookie when the checkout is created.
+// Older receipts without productId continue to require a provider-supplied product cart.
+export type Receipt = { sessionId: string; date: string; createdAt: number; productId?: string };
 export type PurchaseState = 'paid' | 'pending' | 'failed' | 'cancelled' | 'not_started' | 'unavailable' | 'misconfigured' | 'refunded';
 export type PurchaseStatus = { state: PurchaseState; paid: boolean };
 
@@ -53,7 +55,8 @@ function parseSigned<T>(value: string | undefined): T | null {
 function isValidReceipt(value: Receipt | null): value is Receipt {
   return Boolean(value && isSessionId(value.sessionId) && isDate(value.date) &&
     Number.isSafeInteger(value.createdAt) && value.createdAt <= Date.now() + 60000 &&
-    value.createdAt > Date.now() - EXPIRY_MS);
+    value.createdAt > Date.now() - EXPIRY_MS &&
+    (value.productId === undefined || /^pdt_[A-Za-z0-9_-]+$/.test(value.productId)));
 }
 export function encodeReceipt(data: Receipt): string {
   if (!isValidReceipt(data)) throw new Error('INVALID_RECEIPT');
@@ -84,7 +87,7 @@ export function readRecoveryToken(raw: string): Receipt | null {
   if (!value || value.purpose !== 'recover' || !isValidReceipt(value) ||
       !Number.isSafeInteger(value.issuedAt) || value.issuedAt < value.createdAt ||
       value.issuedAt > Date.now() + 60000) return null;
-  return { sessionId:value.sessionId, date:value.date, createdAt:value.createdAt };
+  return { sessionId:value.sessionId, date:value.date, createdAt:value.createdAt, ...(value.productId ? {productId:value.productId} : {}) };
 }
 
 async function dodo(path: string, init?: RequestInit): Promise<unknown> {
@@ -119,7 +122,7 @@ export async function createCheckout(date: string, siteOrigin: string): Promise<
 }
 type CheckoutResponse = { id?: unknown; payment_id?: unknown; payment_status?: unknown };
 type PaymentResponse = {
-  status?: unknown; metadata?: Record<string, unknown> | null;
+  status?: unknown; payment_id?: unknown; metadata?: Record<string, unknown> | null;
   product_cart?: { product_id?: string; quantity?: number }[] | null;
   checkout_session_id?: unknown; refund_status?: unknown;
   refunds?: {status?:string}[] | null;
@@ -137,6 +140,8 @@ export async function statusForReceipt(receipt: Receipt, date: string): Promise<
       return {state:'pending',paid:false};
     const payment = await dodo('/payments/' + encodeURIComponent(checkout.payment_id)) as PaymentResponse;
     if (payment.status !== 'succeeded') return {state:'pending',paid:false};
+    if (payment.payment_id !== undefined && payment.payment_id !== checkout.payment_id)
+      return {state:'unavailable',paid:false};
     // A refunded purchase cannot continue to unlock the report.
     if (payment.refund_status === 'full' || payment.refund_status === 'partial' ||
         payment.refunds?.some(refund => refund.status === 'succeeded'))
@@ -145,10 +150,19 @@ export async function statusForReceipt(receipt: Receipt, date: string): Promise<
     if (payment.checkout_session_id !== receipt.sessionId ||
         payment.metadata?.product !== 'birthday_time_capsule_v2' ||
         payment.metadata?.birthday !== date ||
-        !Array.isArray(payment.product_cart) ||
-        payment.product_cart.length !== 1 ||
-        payment.product_cart[0].product_id !== process.env.DODO_PRODUCT_ID ||
-        payment.product_cart[0].quantity !== 1) {
+        (receipt.productId !== undefined && receipt.productId !== process.env.DODO_PRODUCT_ID)) {
+      return {state:'unavailable',paid:false};
+    }
+    // Dodo's Payment.product_cart is optional in the official response schema.
+    // If present, it MUST be a single item for our pinned product. If Dodo omits
+    // it, rely on the server-signed productId on the original checkout receipt.
+    // Never grant a legacy receipt without product_cart this fallback.
+    const cart = payment.product_cart;
+    if (cart != null) {
+      if (!Array.isArray(cart) || cart.length !== 1 ||
+          cart[0]?.product_id !== process.env.DODO_PRODUCT_ID || cart[0]?.quantity !== 1)
+        return {state:'unavailable',paid:false};
+    } else if (receipt.productId !== process.env.DODO_PRODUCT_ID) {
       return {state:'unavailable',paid:false};
     }
     return {state:'paid',paid:true};

@@ -6,6 +6,7 @@ import {
   type Receipt,
 } from '../lib/payments';
 import { parseCheckoutResponse } from '../lib/checkout-response';
+import { isTrustedCheckoutOrigin } from '../lib/security/checkout-origin';
 
 const originalFetch=globalThis.fetch;
 const previous={
@@ -18,7 +19,7 @@ process.env.DODO_PAYMENTS_API_KEY='api_test_placeholder';
 process.env.DODO_PRODUCT_ID='pdt_capsule_200_usd_test';
 process.env.PURCHASE_COOKIE_SECRET='only-for-unit-testing-01234567890123456789012';
 process.env.DODO_MODE='test_mode';
-const receipt:Receipt={sessionId:'cks_0123456789verified',date:'2000-07-20',createdAt:Date.now()};
+const receipt:Receipt={sessionId:'cks_0123456789verified',date:'2000-07-20',createdAt:Date.now(),productId:'pdt_capsule_200_usd_test'};
 
 function withProvider(payment:Record<string,unknown>,status='succeeded') {
   globalThis.fetch=(async (input:RequestInfo|URL)=>{
@@ -87,6 +88,30 @@ test('fake or incomplete provider responses never unlock premium',async()=>{
   assert.equal((await statusForReceipt(receipt,receipt.date)).paid,false);
   withProvider({...validPayment,refunds:[{status:'succeeded'}]});
   assert.deepEqual(await statusForReceipt(receipt,receipt.date),{state:'refunded',paid:false});
+  withProvider({...validPayment,payment_id:'pay_wrong_invoice'});
+  assert.equal((await statusForReceipt(receipt,receipt.date)).paid,false);
+});
+test('optional Dodo payment cart is verified by a new server-signed product receipt',async()=>{
+  const {product_cart:unused,...withoutCart}=validPayment;
+  assert.ok(unused);
+  withProvider(withoutCart);
+  assert.deepEqual(await statusForReceipt(receipt,receipt.date),{state:'paid',paid:true});
+  const legacy:Receipt={sessionId:receipt.sessionId,date:receipt.date,createdAt:receipt.createdAt};
+  assert.equal((await statusForReceipt(legacy,receipt.date)).paid,false);
+  withProvider({...withoutCart,product_cart:[]});
+  assert.equal((await statusForReceipt(receipt,receipt.date)).paid,false);
+  withProvider({...withoutCart,product_cart:[{product_id:'pdt_wrong',quantity:1}]});
+  assert.equal((await statusForReceipt(receipt,receipt.date)).paid,false);
+  withProvider(withoutCart);
+  const changed:Receipt={...receipt,productId:'pdt_another_product'};
+  assert.equal((await statusForReceipt(changed,receipt.date)).paid,false);
+});
+test('only genuine site origins or trusted forwarded public host can start checkout',()=>{
+  const headers=new Headers({'host':'internal:3000','x-forwarded-host':'areyourare.ai.studio','x-forwarded-proto':'https'});
+  assert.equal(isTrustedCheckoutOrigin('https://areyourare.ai.studio','http://internal:3000',headers,'https://areyourare.ai.studio'),true);
+  assert.equal(isTrustedCheckoutOrigin('https://evil.example','http://internal:3000',headers,'https://areyourare.ai.studio'),false);
+  assert.equal(isTrustedCheckoutOrigin('null','http://internal:3000',headers,'https://areyourare.ai.studio'),false);
+  assert.equal(isTrustedCheckoutOrigin('https://areyourare.ai.studio.evil.test','http://internal:3000',headers,'https://areyourare.ai.studio'),false);
 });
 test('checkout redirects to our provider-confirmed return route',async()=>{
   globalThis.fetch=(async (_input:RequestInfo|URL,init?:RequestInit)=>{

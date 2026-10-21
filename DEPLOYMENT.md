@@ -62,3 +62,9 @@ If the pay button reports **"Payment API returned a web page instead of checkout
 3. Deploy the **full Next.js server**, not only exported/static HTML. In Google AI Studio, pull the latest GitHub changes and republish the full-stack Cloud Run app; the preview proxy is not a substitute for validating the production hostname. Check Cloud Run request logs for POST `/api/checkout` (especially 404/403/500/502).
 4. If the GET diagnostic works but checkout does not, inspect POST response status/content-type in browser Network tab and check safe server logs. Check that live API key, live $2 product and mode are correct and belong to the same approved business.
 5. Verify in Dodo sandbox that payment success returns to `/payment/return`, provider-side verification unlocks `/result`, and unpaid sessions cannot read `/api/capsule`. Confirm live checkout separately before taking customer payments.
+
+## 2026-10-21 purchase-verification compatibility + reverse proxy fix
+
+- Dodo's official `Payment.product_cart` can be omitted. New checkouts sign the configured product ID into the HttpOnly receipt; the server still independently verifies the session ID, succeeded payment ID, metadata, birthday, and refunds. If `product_cart` is supplied, it must match exactly. Legacy cookies without a product ID cannot use the fallback.
+- A trusted forwarded public HTTPS origin no longer triggers false `Invalid request origin` when the Next.js runtime uses an internal HTTP request URL. A 403 **HTML** from the upstream preview proxy is outside this Next.js route and requires the published deployment/host to be fixed.
+- Confirm the published `GET /api/checkout` returns JSON. Test `POST /api/checkout` from the **published website** and inspect request/response in the browser Network panel before asserting Dodo is broken.

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseBirthday } from '@/lib/birthday';
 import { checkoutReady, createCheckout, encodeReceipt, cookieNameForDate, COOKIE_DAYS } from '@/lib/payments';
+import { isTrustedCheckoutOrigin } from '@/lib/security/checkout-origin';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 // Safe read-only diagnostics: if this URL returns HTML in the deployed site,
@@ -11,7 +12,7 @@ export async function GET() {
 }
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
-  if (origin && origin !== request.nextUrl.origin) {
+  if (origin && !isTrustedCheckoutOrigin(origin,request.nextUrl.origin,request.headers,process.env.APP_URL)) {
     return NextResponse.json({error:'Invalid request origin.'},{status:403});
   }
   if (!checkoutReady()) return NextResponse.json({
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
     const now=Date.now();
     response.cookies.set(cookieNameForDate(date.iso),encodeReceipt({
       sessionId:session.sessionId,date:date.iso,createdAt:now,
+      productId:process.env.DODO_PRODUCT_ID,
     }),{
       httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',
       path:'/',maxAge:COOKIE_DAYS*86400,
